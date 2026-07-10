@@ -15,23 +15,25 @@ CommodEx is a B2B SaaS platform for UK industrial SMEs and commodity traders. It
 ---
 
 ## Repository Structure
+
+```
 commodityexchange/
-├── frontend/       # React + TypeScript SPA
-├── backend/        # Single FastAPI application (one server, one deployment)
-│   ├── main.py     # Entry point - registers all modules
-│   ├── rag/        # RAG chatbot module (/api/chat)
-│   ├── barter/     # Barter matching engine module (/api/barter)
-│   ├── pricing/    # Commodity pricing module (/api/prices)
-│   ├── guardrails/ # Applied on every request automatically
-│   ├── ingestion/  # Run locally only, not deployed
-│   ├── evaluation/ # Run locally only, not deployed
+├── frontend/           # React + TypeScript SPA
+├── backend/            # Single FastAPI application (one server, one deployment)
+│   ├── main.py         # Entry point - registers all modules
+│   ├── rag/            # RAG module (/api/chat)
+│   ├── barter/         # Barter matching engine module (/api/barter)
+│   ├── pricing/        # Commodity pricing module (/api/prices)
+│   ├── guardrails/     # Applied on every request automatically
+│   ├── ingestion/      # Run locally only, not deployed
+│   ├── evaluation/     # Run locally only, not deployed
 │   └── requirements.txt
-├── data/           # Local data files, not deployed
+├── data/               # Local data files, not deployed
 │   ├── chroma_db/
 │   ├── chunks.json
 │   └── worldbank_clean.csv
 └── README.md
-
+```
 ---
 
 ## Tech Stack
