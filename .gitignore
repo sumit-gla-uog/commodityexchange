@@ -1,0 +1,6 @@
+# ignore env file so that we don't commit api keys accidently
+.env
+
+# Chainlit auto-generated files
+.chainlit/
+chainlit.md

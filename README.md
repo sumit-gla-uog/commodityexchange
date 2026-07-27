@@ -87,6 +87,50 @@ Topic guard, hallucination check, and toxicity filter applied on every query and
 
 ## Local Setup
 
+## Data Setup (Run Locally)- if you want to see intelligence answer before hand.
+
+Download World Bank Pink Sheet:
+https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx
+Place in data/ folder then run:
+
+cd backend
+python ingestion/clean_worldbank.py
+python ingestion/transform_chunks.py
+python ingestion/embed_store.py
+
+## Chainlit UI Setup (Prototype)
+
+The RAG chatbot prototype uses Chainlit. Due to Python 3.13 
+incompatibility with the cryptography package, Chainlit must 
+be installed via Conda instead of pip.
+
+### Prerequisites
+
+If Chainlit installation fails with pip due to cryptography 
+build error on Python 3.13, use the following:
+
+```bash
+# Install via Conda
+source ~/miniconda3/bin/activate
+conda install -c conda-forge chainlit
+```
+
+### Run Chainlit UI
+
+```bash
+# From project root
+chainlit run chainlit-ui/app.py --port 8001
+```
+
+Open browser at http://localhost:8001
+
+### Note
+
+Chainlit UI is a prototype for the RAG chatbot demonstration. 
+It will be replaced by the React frontend in the final platform. 
+If port 8001 is in use, change to any available port.
+
+
 ### Backend
 
 ```bash
@@ -108,7 +152,7 @@ Frontend: `http://localhost:3000`
 
 ---
 
-## Data Pipeline (Run Locally Only)
+## Data Pipeline (Run Locally Only) - Explained above on line number - 90
 
 ```bash
 cd backend
