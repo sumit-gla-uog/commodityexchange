@@ -7,7 +7,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS — React frontend ko allow karo
+# CORS -Allow React frontend 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
