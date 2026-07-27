@@ -87,6 +87,17 @@ Topic guard, hallucination check, and toxicity filter applied on every query and
 
 ## Local Setup
 
+## Data Setup (Run Locally)- if you want to see intelligence answer before hand.
+
+Download World Bank Pink Sheet:
+https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx
+Place in data/ folder then run:
+
+cd backend
+python ingestion/clean_worldbank.py
+python ingestion/transform_chunks.py
+python ingestion/embed_store.py
+
 ### Backend
 
 ```bash
@@ -108,7 +119,7 @@ Frontend: `http://localhost:3000`
 
 ---
 
-## Data Pipeline (Run Locally Only)
+## Data Pipeline (Run Locally Only) - Explained above on line number - 90
 
 ```bash
 cd backend
