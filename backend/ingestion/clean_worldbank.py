@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-# Sirf ye commodities chahiye CommodEx ke liye
+# We need only these commodities for CommodEx projects fro now
 RELEVANT_COMMODITIES = [
     # Energy
     "Crude oil, Brent",
@@ -29,32 +29,32 @@ def load_raw_data(filepath):
     df = pd.read_excel(
         filepath,
         sheet_name="Monthly Prices",
-        header=4        # Row 4 pe actual headers hain
+        header=4        # Row 4, actual headers exist
     )
     
-    # First column ka naam fix karo — ye date column hai
+    # Fix First column name  — It's date column 
     df = df.rename(columns={"Unnamed: 0": "date"})
     
-    # Units row hataao (row index 0 — $/bbl, $/mt etc.)
+    # Remove Units row  (row index 0 — $/bbl, $/mt etc.)
     df = df.drop(index=0).reset_index(drop=True)
     
     return df
 
 def clean_data(df):
-    # Sirf relevant commodities ki columns rakhna
+    # Only keep relevant commodities 
     cols_to_keep = ["date"] + RELEVANT_COMMODITIES
     df = df[cols_to_keep]
     
-    # "…" ko NaN me convert karo
+    # Convert "…" into NaN 
     df = df.replace("…", pd.NA)
     
-    # Date format clean karo: 1960M01 → 1960-01
+    # cleaning Date format : 1960M01 → 1960-01
     df["date"] = df["date"].str.replace("M", "-", regex=False)
     
-    # NaN rows drop karo (jahan date missing ho)
+    # Dropping NaN rows (from where date is missing)
     df = df.dropna(subset=["date"])
     
-    # Price columns ko numeric banao
+    # making Price columns  numeric 
     for col in RELEVANT_COMMODITIES:
         df[col] = pd.to_numeric(df[col], errors="coerce")
     

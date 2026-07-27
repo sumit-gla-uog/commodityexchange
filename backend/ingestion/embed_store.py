@@ -1,4 +1,4 @@
-# Part 1: Imports aur Config
+# Part 1: Imports and Config
 import json
 import os
 import time
@@ -11,8 +11,8 @@ load_dotenv()
 INPUT_FILE = "data/chunks.json"
 CHROMA_DIR = "data/chroma_db"
 COLLECTION_NAME = "commodity_prices"
-BATCH_SIZE = 50  # HuggingFace API rate limit ke liye chhota batch
-START_FROM = 0  # jo fail hua wahan se, temporary change
+BATCH_SIZE = 50  # small batch for HuggingFace API rate limit
+START_FROM = 0  #  temporary change, where it got failed
 
 HF_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 HF_URL = "https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2/pipeline/feature-extraction"
@@ -82,10 +82,10 @@ def embed_and_store(chunks, collection):
         metadatas = [c["metadata"] for c in batch]
         ids = [f"chunk_{i + j}" for j in range(len(batch))]
         
-        # HuggingFace API se embeddings lo
+        # take embedding from HuggingFace API 
         embeddings = get_embeddings(texts)
         
-        # ChromaDB me store karo
+        # store it in ChromaDB 
         collection.add(
             documents=texts,
             embeddings=embeddings,
@@ -95,7 +95,7 @@ def embed_and_store(chunks, collection):
         
         print(f"Stored {min(i + BATCH_SIZE, total)}/{total} chunks")
         
-        # Rate limit avoid karne ke liye thoda wait karo
+        # to avoid Rate limit, we are waiting for few milli seconds
         time.sleep(1)# 0.5 se badhakar 1 second
 
 # Part 5: Verify + Main

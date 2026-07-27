@@ -7,7 +7,7 @@ import os
 INPUT_FILE = "data/worldbank_clean.csv"
 OUTPUT_FILE = "data/chunks.json"
 
-# Har commodity ka unit — chunk me use hoga
+# each unit of the commodity - will be used in chunks
 COMMODITY_UNITS = {
     "Crude oil, Brent":      "USD per barrel",
     "Natural gas, Europe":   "USD per mmbtu",
@@ -25,7 +25,7 @@ COMMODITY_UNITS = {
     "Soybeans":              "USD per metric ton",
 }
 
-# Part 2: Single Chunk Banana
+# Part 2: making Single Chunk 
 def make_chunk(commodity, date, price, unit, prev_price=None):
     # Base sentence
     text = (
@@ -34,7 +34,7 @@ def make_chunk(commodity, date, price, unit, prev_price=None):
         f"World Bank Pink Sheet data."
     )
 
-    # Month-on-month change add karo
+    # Month-on-month adding change
     if prev_price is not None and prev_price > 0:
         change = ((price - prev_price) / prev_price) * 100
         direction = "increase" if change > 0 else "decrease"
@@ -53,19 +53,19 @@ def make_chunk(commodity, date, price, unit, prev_price=None):
             "source": "World Bank Pink Sheet"
         }
     }
-# Part 3: Saare Chunks Generate Karo
+# Part 3: Generating all Chunks
 def generate_chunks(df):
     all_chunks = []
 
     for commodity, unit in COMMODITY_UNITS.items():
-        # Sirf is commodity ki rows lo
+        # only taking commodity rows
         comm_df = df[["date", commodity]].dropna()
 
         for i, row in comm_df.iterrows():
             date = row["date"]
             price = row[commodity]
 
-            # Previous month ka price
+            # Previous month price
             prev_price = None
             if i > 0 and commodity in df.columns:
                 prev_val = df.loc[i - 1, commodity]
