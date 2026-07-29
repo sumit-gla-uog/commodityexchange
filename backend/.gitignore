@@ -1,0 +1,24 @@
+# Environment variables - never commit
+.env
+
+# Vector Store - local data, not for repo
+data/chroma_db/
+data/chunks.json
+data/worldbank_clean.csv
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Virtual Environment
+venv/
+venv311/
+.venv/
+
+# Mac
+.DS_Store
+
+# IDE
+.vscode/
