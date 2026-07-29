@@ -1,0 +1,59 @@
+{
+  "listings": [
+    {
+      "id": "uuid-0001",
+      "sme_name": "Acme Steel Ltd",
+      "commodity_offered": "Copper",
+      "quantity_offered_mt": 50.0,
+      "commodity_wanted": "Aluminum",
+      "quantity_wanted_mt": 45.0,
+      "location_uk": "Glasgow",
+      "status": "active",
+      "created_at": "2026-07-01"
+    },
+    {
+      "id": "uuid-0002",
+      "sme_name": "BuildRight Construction",
+      "commodity_offered": "Aluminum",
+      "quantity_offered_mt": 48.0,
+      "commodity_wanted": "Copper",
+      "quantity_wanted_mt": 50.0,
+      "location_uk": "Edinburgh",
+      "status": "active",
+      "created_at": "2026-07-02"
+    },
+    {
+      "id": "uuid-0003",
+      "sme_name": "GrainPro Foods",
+      "commodity_offered": "Wheat, US HRW",
+      "quantity_offered_mt": 100.0,
+      "commodity_wanted": "Maize",
+      "quantity_wanted_mt": 95.0,
+      "location_uk": "Manchester",
+      "status": "active",
+      "created_at": "2026-07-03"
+    },
+    {
+      "id": "uuid-0004",
+      "sme_name": "NorthEnergy Ltd",
+      "commodity_offered": "Coal, Australian",
+      "quantity_offered_mt": 200.0,
+      "commodity_wanted": "Natural gas, Europe",
+      "quantity_wanted_mt": 180.0,
+      "location_uk": "Leeds",
+      "status": "active",
+      "created_at": "2026-07-04"
+    },
+    {
+      "id": "uuid-0005",
+      "sme_name": "PalmTrade UK",
+      "commodity_offered": "Palm oil",
+      "quantity_offered_mt": 30.0,
+      "commodity_wanted": "Soybeans",
+      "quantity_wanted_mt": 28.0,
+      "location_uk": "Birmingham",
+      "status": "matched",
+      "created_at": "2026-06-25"
+    }
+  ]
+}
