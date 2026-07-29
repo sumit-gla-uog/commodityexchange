@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import {Sidebar} from './src/components/layout/Sidebar'
-import { Header } from './src/components/layout/Header'
+import {Sidebar} from './components/layout/Sidebar'
+import { Header } from './components/layout/Header'
+import { DashboardPage } from './pages/Dashboard/DashboardPage'
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <main className="flex-1 p-6">
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<div>Dashboard Coming Soon</div>} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/barter" element={<div>Barter Coming Soon</div>} />
             <Route path="/chat" element={<div>Chat Coming Soon</div>} />
             <Route path="/evals" element={<div>Evaluations  Coming Soon</div>} />
