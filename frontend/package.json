@@ -10,9 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@salt-ds/core": "^1.18.0",
+    "@salt-ds/icons": "^1.18.0",
+    "ag-grid-community": "^36.0.2",
+    "ag-grid-react": "^36.0.2",
+    "highcharts": "^13.0.0",
+    "highcharts-react-official": "^3.2.3",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-router-dom": "^7.18.2",
+    "react-hook-form": "^7.83.0",
+    "react-router-dom": "^7.11.0",
     "swr": "^2.4.2"
   },
   "devDependencies": {
