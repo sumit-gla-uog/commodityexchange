@@ -6,7 +6,7 @@ Student: Sumit Kumar  (3167833K)
 Supervisor: Blair Archibald
 
 ---
-> **Note:** This README reflects the current project plan and proposed architecture. Nothing has been implemented or finalised at this stage. All architectural and technical decisions are subject to change pending supervisor feedback. This document is intended to provide a high-level overview for reference purposes only.
+> **Note:** This README reflects the current project plan and proposed architecture. Implementation has been started post feedback discussion from our supervisor. All architectural and technical decisions are subject to change pending supervisor feedback. This document is intended to provide a high-level overview for reference purposes only.
 
 ## Project Overview
 
