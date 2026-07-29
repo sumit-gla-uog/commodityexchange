@@ -1,11 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import {Sidebar} from './src/components/layout/Sidebar'
+import { Header } from './src/components/layout/Header'
 
 function App() {
   return (
     <BrowserRouter>
       <div className="flex min-h-screen bg-gray-950 text-white">
         <Sidebar />
+        <div className="flex-1 flex flex-col">
+          <Header title="Commodity Exchange" />
         <main className="flex-1 p-6">
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -16,6 +19,7 @@ function App() {
             <Route path="/orders" element={<div>Orders Coming Soon</div>} />
           </Routes>
         </main>
+        </div>
       </div>
     </BrowserRouter>
   )
