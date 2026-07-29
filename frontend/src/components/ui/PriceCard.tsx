@@ -4,13 +4,21 @@ import type { CommodityPrice } from '../../types/commodity'
 
 interface PriceCardProps {
   commodity: CommodityPrice
+   onClick: () => void
+  isSelected: boolean
 }
 
-export const PriceCard = ({ commodity }: PriceCardProps) => {
+export const PriceCard = ({ commodity , onClick, isSelected }: PriceCardProps) => {
   const isUp = commodity.trend === 'up'
 
   return (
-    <div className="p-4 rounded-lg border border-gray-700 bg-gray-800 hover:border-blue-500 transition-colors cursor-pointer">
+    <div 
+    onClick={onClick}
+   className={`p-4 rounded-lg border cursor-pointer transition-colors ${
+  isSelected 
+    ? 'border-blue-500 bg-gray-700' 
+    : 'border-gray-600 bg-gray-800 hover:border-blue-500'
+}`}>
       <div className="flex justify-between items-start mb-3">
         <span className="text-xs text-gray-400 uppercase tracking-wide">
           {commodity.category}
