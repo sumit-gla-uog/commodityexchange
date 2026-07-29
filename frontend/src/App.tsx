@@ -1,11 +1,27 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import {Sidebar} from './components/layout/Sidebar'
+import { Header } from './components/layout/Header'
+import { DashboardPage } from './pages/Dashboard/DashboardPage'
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<div>Commodity exchange scaffold component</div>} />
-      </Routes>
+      <div className="flex min-h-screen bg-gray-950 text-white">
+        <Sidebar />
+        <div className="flex-1 flex flex-col">
+          <Header title="Commodity Exchange" />
+        <main className="flex-1 p-6">
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/barter" element={<div>Barter Coming Soon</div>} />
+            <Route path="/chat" element={<div>Chat Coming Soon</div>} />
+            <Route path="/evals" element={<div>Evaluations  Coming Soon</div>} />
+            <Route path="/orders" element={<div>Orders Coming Soon</div>} />
+          </Routes>
+        </main>
+        </div>
+      </div>
     </BrowserRouter>
   )
 }
