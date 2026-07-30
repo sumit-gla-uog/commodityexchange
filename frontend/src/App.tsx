@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import {Sidebar} from './components/layout/Sidebar'
 import { Header } from './components/layout/Header'
 import { DashboardPage } from './pages/Dashboard/DashboardPage'
+import { BarterPage } from './pages/Barter/BarterPage'
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/barter" element={<div>Barter Coming Soon</div>} />
+            <Route path="/barter" element={<BarterPage />} />
             <Route path="/chat" element={<div>Chat Coming Soon</div>} />
             <Route path="/evals" element={<div>Evaluations  Coming Soon</div>} />
             <Route path="/orders" element={<div>Orders Coming Soon</div>} />
