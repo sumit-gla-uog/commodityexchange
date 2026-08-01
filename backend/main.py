@@ -12,7 +12,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",    # React dev server
-        "http://localhost:5173"
+        "http://localhost:5173",
         "https://commodex.netlify.app"  # Production
     ],
     allow_credentials=True,
