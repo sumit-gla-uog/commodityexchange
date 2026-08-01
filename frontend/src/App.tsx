@@ -3,6 +3,8 @@ import {Sidebar} from './components/layout/Sidebar'
 import { Header } from './components/layout/Header'
 import { DashboardPage } from './pages/Dashboard/DashboardPage'
 import { BarterPage } from './pages/Barter/BarterPage'
+import { ChatPage } from './pages/Chat/ChatPage'
+
 
 function App() {
   return (
@@ -16,7 +18,7 @@ function App() {
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/barter" element={<BarterPage />} />
-            <Route path="/chat" element={<div>Chat Coming Soon</div>} />
+            <Route path="/chat" element={<ChatPage />} />
             <Route path="/evals" element={<div>Evaluations  Coming Soon</div>} />
             <Route path="/orders" element={<div>Orders Coming Soon</div>} />
           </Routes>
