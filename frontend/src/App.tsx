@@ -4,6 +4,7 @@ import { Header } from './components/layout/Header'
 import { DashboardPage } from './pages/Dashboard/DashboardPage'
 import { BarterPage } from './pages/Barter/BarterPage'
 import { ChatPage } from './pages/Chat/ChatPage'
+import { OrdersPage } from './pages/Orders/OrdersPage'
 
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
             <Route path="/barter" element={<BarterPage />} />
             <Route path="/chat" element={<ChatPage />} />
             <Route path="/evals" element={<div>Evaluations  Coming Soon</div>} />
-            <Route path="/orders" element={<div>Orders Coming Soon</div>} />
+            <Route path="/orders" element={<OrdersPage />} />
           </Routes>
         </main>
         </div>
