@@ -12,7 +12,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",    # React dev server
-        "http://localhost:5173",    # Vite dev server
+        "http://localhost:5173"
         "https://commodex.netlify.app"  # Production
     ],
     allow_credentials=True,
@@ -30,12 +30,12 @@ def health_check():
     }
 
 # Routers - I will uncomment each module as it is implemented
-# from rag.router import router as rag_router
+from rag.router import router as rag_router
 from barter.router import router as barter_router
 from pricing.router import router as pricing_router
 # from auth.router import router as auth_router
 
-# app.include_router(rag_router, prefix="/api/chat", tags=["RAG"])
+app.include_router(rag_router, prefix="/api/chat", tags=["RAG"])
 app.include_router(barter_router, prefix="/api/barter", tags=["Barter"])
 app.include_router(pricing_router, prefix="/api/prices", tags=["Pricing"])
 # app.include_router(auth_router, prefix="/api/auth", tags=["Auth"])
