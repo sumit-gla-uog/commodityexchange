@@ -145,8 +145,38 @@ def match_listing(listing_id: str):
     if not matches:
         return {"message": "No matches found", "matches": []}
 
+    if not matches:
+        return {"message": "No matches found", "matches": []}
+
+    # TODO: Auto-create order in Supabase when match is found
+    mock_order = {
+        "id": f"MCH-{listing_id[-4:]}",
+        "sme_a": source["sme_name"],
+        "commodity_a": source["commodity_offered"],
+        "quantity_a": source["quantity_offered_mt"],
+        "sme_b": matches[0]["matched_listing"]["sme_name"],
+        "commodity_b": matches[0]["matched_listing"]["commodity_offered"],
+        "quantity_b": matches[0]["matched_listing"]["quantity_offered_mt"],
+        "fair_value_delta": matches[0]["fair_value"]["delta_usd"] if matches[0]["fair_value"] else 0,
+        "status": "pending",
+        "created_at": "2026-07-30"
+    }
+
+    return {
+        "source_listing": source,
+        "matches": matches,
+        "total_matches": len(matches),
+        "order_created": mock_order
+    }
+
     return {
         "source_listing": source,
         "matches": matches,
         "total_matches": len(matches)
     }
+
+
+# if matches:
+#     # TODO: Auto_create order in Supabase when match is found
+#     # For now mock response only
+#     pass
