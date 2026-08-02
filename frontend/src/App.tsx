@@ -5,6 +5,7 @@ import { DashboardPage } from './pages/Dashboard/DashboardPage'
 import { BarterPage } from './pages/Barter/BarterPage'
 import { ChatPage } from './pages/Chat/ChatPage'
 import { OrdersPage } from './pages/Orders/OrdersPage'
+import { EvaluationsPage } from './pages/Evaluations/EvaluationsPage'
 
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/barter" element={<BarterPage />} />
             <Route path="/chat" element={<ChatPage />} />
-            <Route path="/evals" element={<div>Evaluations  Coming Soon</div>} />
+            <Route path="/evals" element={<EvaluationsPage/>} />
             <Route path="/orders" element={<OrdersPage />} />
           </Routes>
         </main>
