@@ -1,6 +1,14 @@
+import time
+
 from fastapi import APIRouter
 import pandas as pd
 import os
+import requests as req
+from dotenv import load_dotenv
+
+load_dotenv()
+
+ALPHA_VANTAGE_KEY = os.getenv("ALPHA_VANTAGE_API_KEY")
 
 router = APIRouter()
 
@@ -8,6 +16,10 @@ CSV_PATH = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     "data", "worldbank_clean.csv"
 )
+
+_cache = {}
+_cache_time = {}
+CACHE_TTL = 3600  # 1 hour cache
 
 COMMODITY_UNITS = {
     "Crude oil, Brent":    "USD per barrel",
@@ -42,6 +54,25 @@ COMMODITY_CATEGORIES = {
     "Palm oil":            "Agriculture",
     "Soybeans":            "Agriculture",
 }
+
+# Alpha Vantage commodity function mapping
+ALPHA_VANTAGE_COMMODITIES = {
+    "Copper": "COPPER",
+    "Aluminum": "ALUMINUM",
+    "Crude oil, Brent": "BRENT",
+    "Natural gas, Europe": "NATURAL_GAS",
+    "Coal, Australian": None,        # Not available in Alpha Vantage
+    "Nickel": "NICKEL",
+    "Zinc": "ZINC",
+    "Lead": "LEAD",
+    "Iron ore, cfr spot": None,      # Not available
+    "Wheat, US HRW": "WHEAT",
+    "Maize": "CORN",
+    "Sugar, world": "SUGAR",
+    "Palm oil": None,                # Not available
+    "Soybeans": "SOYBEANS",
+}
+
 
 
 @router.get("/historical")
@@ -86,3 +117,60 @@ def get_historical_prices():
         })
 
     return {"commodities": commodities}
+
+@router.get("/live")
+def get_live_prices():
+    live_prices = {}
+    # If cache is fresh then return cache 
+    if _cache and (time.time() - _cache_time.get("last", 0)) < CACHE_TTL:
+        return {"live_prices": _cache, "source": "cache"}
+
+
+    for commodity, av_function in ALPHA_VANTAGE_COMMODITIES.items():
+        if av_function is None:
+            live_prices[commodity] = {
+                "price": None,
+                "date": None,
+                "source": "not_available"
+            }
+            continue
+
+        try:
+            url = f"https://www.alphavantage.co/query?function={av_function}&interval=monthly&apikey={ALPHA_VANTAGE_KEY}"
+            response = req.get(url, timeout=10)
+            data = response.json()
+
+             # Rate limit check
+            if "Note" in data or "Information" in data:
+                live_prices[commodity] = {
+                    "price": None,
+                    "date": None,
+                    "source": "rate_limited"
+                }
+                continue
+
+            # Alpha Vantage returns 'data' array with latest first
+            if "data" in data and len(data["data"]) > 0:
+                latest = data["data"][0]
+                live_prices[commodity] = {
+                    "price": float(latest["value"]),
+                    "date": latest["date"],
+                    "source": "alpha_vantage"
+                }
+            else:
+                live_prices[commodity] = {
+                    "price": None,
+                    "date": None,
+                    "source": "error"
+                }
+
+        except Exception as e:
+            live_prices[commodity] = {
+                "price": None,
+                "date": None,
+                "source": "error"
+            }
+         # Delay between calls to avoid rate limit
+        time.sleep(12)  # 5 calls per minute on free tier
+
+    return {"live_prices": live_prices}
