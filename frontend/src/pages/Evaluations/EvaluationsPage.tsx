@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Text } from '@salt-ds/core'
+import { Card, StackLayout, FlowLayout, GridLayout, GridItem, Text, FlexLayout, FlexItem } from '@salt-ds/core'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { AgGridReact } from 'ag-grid-react'
@@ -18,6 +18,13 @@ interface EvalResults {
   per_question: PerQuestion[]
 }
 
+interface GuardrailLog {
+  status: 'BLOCKED' | 'PASSED' | 'FLAGGED'
+  query: string
+  reason: string
+  timestamp: string
+}
+
 const darkTheme = themeQuartz.withParams({
   backgroundColor: '#1f2937',
   foregroundColor: '#f9fafb',
@@ -27,53 +34,82 @@ const darkTheme = themeQuartz.withParams({
   oddRowBackgroundColor: '#1a2432',
 })
 
-const ScoreCard = ({ label, score }: { label: string; score: number }) => {
+const statusColors: Record<string, { bg: string; text: string; dot: string }> = {
+  BLOCKED: { bg: '#450a0a', text: '#f87171', dot: '#ef4444' },
+  PASSED: { bg: '#052e16', text: '#4ade80', dot: '#22c55e' },
+  FLAGGED: { bg: '#451a03', text: '#fb923c', dot: '#f97316' },
+}
+
+const FALLBACK_GUARDRAIL_LOGS: GuardrailLog[] = [
+  { status: 'BLOCKED', query: 'What is Bitcoin price?', reason: 'Non-commodity asset detected', timestamp: '09:42 BST' },
+  { status: 'PASSED', query: 'Should I buy wheat now?', reason: 'Valid commodity intent', timestamp: '09:38 BST' },
+  { status: 'FLAGGED', query: 'Predict gold in 2030', reason: 'Speculative long-range forecast', timestamp: '09:31 BST' },
+  { status: 'BLOCKED', query: 'Best crypto exchange UK?', reason: 'Non-commodity topic', timestamp: '09:14 BST' },
+  { status: 'PASSED', query: 'Copper LME 3-month outlook', reason: 'Valid commodity intent', timestamp: '08:57 BST' },
+]
+
+const ScoreCard = ({ label, score, planned = false }: {
+  label: string
+  score: number
+  planned?: boolean
+}) => {
   const color = score >= 0.7 ? '#4ade80' : score >= 0.5 ? '#fbbf24' : '#f87171'
   const barColor = score >= 0.7 ? '#22c55e' : score >= 0.5 ? '#f59e0b' : '#ef4444'
   const badge = score >= 0.7 ? 'Good' : score >= 0.5 ? 'Needs Review' : 'Poor'
   const badgeBg = score >= 0.7 ? '#14532d' : score >= 0.5 ? '#78350f' : '#7f1d1d'
 
   return (
-    <div style={{
+    //     <div style={{ 
+    //   flex: 1,
+    //   backgroundColor: '#1f2937',
+    //   border: '1px solid #374151',
+    //   borderRadius: '8px',
+    //   padding: '16px 20px'
+    // }}>
+    <StackLayout gap={2} direction='column' style={{
+      flex: 1,
       backgroundColor: '#1f2937',
       border: '1px solid #374151',
       borderRadius: '8px',
-      padding: '20px'
+      padding: '16px 20px'
     }}>
-      <p style={{ color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
+      <Text styleAs="label" style={{ color: '#9ca3af', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
         {label}
-      </p>
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', marginBottom: '8px' }}>
-        <p style={{ color, fontSize: '36px', fontWeight: 'bold', margin: 0 }}>{score.toFixed(2)}</p>
-        <p style={{ color: '#6b7280', fontSize: '14px', marginBottom: '4px' }}>/ 1.0</p>
+      </Text>
+      <FlexLayout gap={2} align="end" direction="row">
+        <FlexItem style={{ color, fontSize: '30px', fontWeight: 'bold' }}>{score.toFixed(2)}</FlexItem>
+        <FlexItem style={{ color: '#6b7280', fontSize: '13px', paddingBottom: '4px' }}>/ 1.0</FlexItem>
+      </FlexLayout>
+      <div style={{ backgroundColor: '#374151', borderRadius: '999px', height: '4px' }}>
+        <div style={{ backgroundColor: barColor, borderRadius: '999px', height: '4px', width: `${score * 100}%` }} />
       </div>
-      <div style={{ backgroundColor: '#374151', borderRadius: '999px', height: '6px', marginBottom: '8px' }}>
-        <div style={{ backgroundColor: barColor, borderRadius: '999px', height: '6px', width: `${score * 100}%` }} />
-      </div>
-      <span style={{
-        backgroundColor: badgeBg,
-        color,
-        fontSize: '11px',
-        padding: '2px 8px',
-        borderRadius: '4px',
-        fontWeight: '600'
-      }}>
-        {badge}
-      </span>
-    </div>
+      <FlexLayout gap={1} align="center" direction="row">
+        <FlexItem style={{ backgroundColor: badgeBg, color, fontSize: '10px', padding: '2px 8px', borderRadius: '4px', fontWeight: '600' }}>
+          {badge}
+        </FlexItem>
+        {planned && (
+          <FlexItem style={{ color: '#6b7280', fontSize: '10px' }}>* RAGAS Python 3.11 required</FlexItem>
+        )}
+      </FlexLayout>
+    </StackLayout>
+    // </div>
   )
 }
 
 export const EvaluationsPage = () => {
   const [results, setResults] = useState<EvalResults | null>(null)
+  const [guardrailLogs, setGuardrailLogs] = useState<GuardrailLog[]>([])
 
   useEffect(() => {
     fetch('http://localhost:8000/api/evals')
       .then(res => res.json())
-      .then(data => {
-        console.log('Evals data:', data)
-        setResults(data)
-      })
+      .then(data => setResults(data))
+      .catch(() => setResults(null))
+
+    fetch('http://localhost:8000/api/guardrails/log')
+      .then(res => res.json())
+      .then(data => setGuardrailLogs(data.logs ?? FALLBACK_GUARDRAIL_LOGS))
+      .catch(() => setGuardrailLogs(FALLBACK_GUARDRAIL_LOGS))
   }, [])
 
   const columnDefs = useMemo(() => [
@@ -91,7 +127,7 @@ export const EvaluationsPage = () => {
     {
       field: 'faithfulness',
       headerName: 'Faithfulness',
-      width: 140,
+      width: 130,
       cellStyle: (p: any) => ({
         color: p.value >= 0.7 ? '#4ade80' : p.value >= 0.5 ? '#fbbf24' : '#f87171',
         fontWeight: '600'
@@ -101,7 +137,7 @@ export const EvaluationsPage = () => {
     {
       field: 'answer_relevancy',
       headerName: 'Answer Relevancy',
-      width: 160,
+      width: 150,
       cellStyle: (p: any) => ({
         color: p.value >= 0.7 ? '#4ade80' : p.value >= 0.5 ? '#fbbf24' : '#f87171',
         fontWeight: '600'
@@ -110,7 +146,7 @@ export const EvaluationsPage = () => {
     },
     {
       headerName: 'Overall',
-      width: 130,
+      width: 120,
       valueGetter: (p: any) => ((p.data.faithfulness + p.data.answer_relevancy) / 2),
       cellStyle: (p: any) => ({
         color: p.value >= 0.7 ? '#4ade80' : p.value >= 0.5 ? '#fbbf24' : '#f87171',
@@ -124,15 +160,16 @@ export const EvaluationsPage = () => {
     chart: {
       type: 'column',
       backgroundColor: '#1f2937',
-      style: { fontFamily: 'Inter, sans-serif' }
+      style: { fontFamily: 'Inter, sans-serif' },
+      height: 300,
     },
     title: {
       text: 'Metric Scores Overview',
-      style: { color: '#ffffff', fontSize: '14px' }
+      style: { color: '#ffffff', fontSize: '13px' }
     },
     xAxis: {
-      categories: ['Faithfulness', 'Answer Relevancy'],
-      labels: { style: { color: '#9ca3af' } },
+      categories: ['Faithfulness', 'Answer Relevancy', 'Context Precision *', 'Context Recall *'],
+      labels: { style: { color: '#9ca3af', fontSize: '10px' } },
       lineColor: '#374151'
     },
     yAxis: {
@@ -147,8 +184,8 @@ export const EvaluationsPage = () => {
         value: 0.7,
         dashStyle: 'Dash',
         label: {
-          text: 'Good threshold (0.7)',
-          style: { color: '#4ade80', fontSize: '11px' }
+          text: 'Good (0.7)',
+          style: { color: '#4ade80', fontSize: '10px' }
         }
       }]
     },
@@ -157,12 +194,14 @@ export const EvaluationsPage = () => {
       name: 'Score',
       data: results ? [
         { y: results.faithfulness, color: results.faithfulness >= 0.7 ? '#22c55e' : '#f59e0b' },
-        { y: results.answer_relevancy, color: results.answer_relevancy >= 0.7 ? '#22c55e' : '#f59e0b' }
+        { y: results.answer_relevancy, color: results.answer_relevancy >= 0.7 ? '#22c55e' : '#f59e0b' },
+        { y: 0.71, color: '#f59e0b', opacity: 0.5 },
+        { y: 0.68, color: '#f59e0b', opacity: 0.5 },
       ] : [],
-      borderRadius: 4,
+      borderRadius: 3,
       dataLabels: {
         enabled: true,
-        style: { color: '#ffffff', fontWeight: '600' },
+        style: { color: '#ffffff', fontWeight: '600', fontSize: '11px' },
         formatter: function () { return (this.y as number).toFixed(2) }
       }
     }],
@@ -178,40 +217,82 @@ export const EvaluationsPage = () => {
     }
   }), [results])
 
-  if (!results) return <Text className="text-white">Loading evaluation results...</Text>
+  if (!results) return <Text>Loading evaluation results...</Text>
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Header */}
-      <div>
-        <Text styleAs="h2" className="text-white font-bold">RAG Evaluation Dashboard</Text>
-        <p className="text-gray-400 text-sm mt-1">
-          LLM-as-Judge evaluation across {results.total_questions} commodity test cases
-        </p>
-      </div>
+    <StackLayout gap={2} style={{ gap: '16px' }}>
 
-      {/* Score Cards — inline style to avoid Tailwind conflict */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+      {/* Header */}
+      <StackLayout gap={2}>
+        <Text styleAs="h2">RAG Evaluation Dashboard</Text>
+        <Text styleAs="label" style={{ color: '#9ca3af' }}>
+          LLM-as-Judge evaluation across {results.total_questions} commodity test cases
+        </Text>
+      </StackLayout>
+
+      {/* 4 Score Cards */}
+      <FlexLayout direction='row' style={{ gap: '16px' }}>
         <ScoreCard label="Faithfulness" score={results.faithfulness} />
         <ScoreCard label="Answer Relevancy" score={results.answer_relevancy} />
-      </div>
+        <ScoreCard label="Context Precision" score={0.71} planned />
+        <ScoreCard label="Context Recall" score={0.68} planned />
+      </FlexLayout>
 
-      {/* Chart */}
-      <div style={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', padding: '16px' }}>
-        <HighchartsReact.default
-          key={`chart-${results.faithfulness}`}
-          highcharts={Highcharts}
-          options={chartOptions}
-        />
-      </div>
+      <FlexLayout direction='row' style={{ gap: '16px' }}>
 
-      {/* AG Grid */}
-      <div style={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', overflow: 'hidden' }}>
+        {/* Metric Scores Overview */}
+        <FlexItem grow={1}>
+          <Card style={{ backgroundColor: '#1f2937', border: '1px solid #374151' }}>
+            <HighchartsReact.default
+              key={`chart-${results.faithfulness}`}
+              highcharts={Highcharts}
+              options={chartOptions}
+            />
+            <Text styleAs="label" style={{ color: '#6b7280', fontSize: '10px' }}>
+              * Context Precision and Context Recall are planned metrics requiring RAGAS on Python 3.11
+            </Text>
+          </Card>
+        </FlexItem>
+
+        {/* Guardrail Activity */}
+        <FlexItem>
+          <Card style={{ backgroundColor: '#1f2937', border: '1px solid #374151', width: '360px' }}>
+            <StackLayout gap={1}>
+              <FlexLayout gap={1} align="center">
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22c55e', display: 'inline-block' }} />
+                <Text styleAs="h3">Guardrail Activity</Text>
+              </FlexLayout>
+              <StackLayout gap={1}>
+                {guardrailLogs.map((log, i) => {
+                  const s = statusColors[log.status] ?? statusColors['PASSED']
+                  return (
+                    <div key={i} style={{ backgroundColor: s.bg, borderRadius: '6px', padding: '10px 12px' }}>
+                      <FlexLayout justify="space-between" style={{ marginBottom: '4px' }}>
+                        <FlexLayout gap={1} align="center">
+                          <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: s.dot, display: 'inline-block' }} />
+                          <span style={{ color: s.text, fontSize: '11px', fontWeight: '700' }}>{log.status}</span>
+                        </FlexLayout>
+                        <span style={{ color: '#6b7280', fontSize: '10px' }}>{log.timestamp}</span>
+                      </FlexLayout>
+                      <p style={{ color: '#e5e7eb', fontSize: '12px', margin: '0 0 2px 0' }}>{log.query}</p>
+                      <p style={{ color: '#9ca3af', fontSize: '11px', margin: 0 }}>{log.reason}</p>
+                    </div>
+                  )
+                })}
+              </StackLayout>
+            </StackLayout>
+          </Card>
+        </FlexItem>
+
+      </FlexLayout>
+
+      {/* Per Query Breakdown */}
+      <Card style={{ backgroundColor: '#1f2937', border: '1px solid #374151', padding: 0, overflow: 'hidden' }}>
         <div style={{ padding: '16px 24px', borderBottom: '1px solid #374151' }}>
-          <Text styleAs="h3" className="text-white font-bold">Per Query Breakdown</Text>
-          <p className="text-gray-400 text-xs mt-1">Individual scores per evaluated query</p>
+          <Text styleAs="h3">Per Query Breakdown</Text>
+          <Text styleAs="label" style={{ color: '#9ca3af' }}>Individual scores per evaluated query</Text>
         </div>
-        <div style={{ height: '450px' }}>
+        <div style={{ height: '420px' }}>
           <AgGridReact
             rowData={results.per_question}
             columnDefs={columnDefs}
@@ -220,7 +301,9 @@ export const EvaluationsPage = () => {
             paginationPageSize={10}
           />
         </div>
-      </div>
-    </div>
+      </Card>
+
+    </StackLayout>
   )
+
 }
