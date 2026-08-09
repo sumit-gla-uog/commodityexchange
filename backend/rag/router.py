@@ -3,6 +3,7 @@ from pydantic import BaseModel
 # from rag.engine import query
 from rag.engine import query, retrieve_context, build_prompt, generate_response
 from guardrails.checks import run_all_guards
+from rag.agent import agentic_query
 
 router = APIRouter()
 
@@ -50,6 +51,29 @@ def chat(request: ChatRequest):
             answer=answer,
             context_chunks=docs
         )
+
+        return ChatResponse(
+            query=request.query,
+            answer=answer
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/agentic", response_model=ChatResponse)
+def agentic_chat(request: ChatRequest):
+    try:
+        # Run all guardrails first
+        guard_result = run_all_guards(query=request.query)
+
+        if not guard_result["overall_passed"]:
+            return ChatResponse(
+                query=request.query,
+                answer=f"I cannot process this query. {guard_result['topic_guard']['reason'] if guard_result['topic_guard'] else guard_result['toxicity_guard']['reason']}"
+            )
+
+        # Agentic RAG || uses live prices + news + historical context
+        answer = agentic_query(request.query)
 
         return ChatResponse(
             query=request.query,
