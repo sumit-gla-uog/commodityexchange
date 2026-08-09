@@ -1,0 +1,64 @@
+{
+  "orders": [
+    {
+      "id": "MCH-001",
+      "sme_a": "Acme Steel Ltd",
+      "commodity_a": "Copper",
+      "quantity_a": 50.0,
+      "sme_b": "BuildRight Construction",
+      "commodity_b": "Aluminum",
+      "quantity_b": 48.0,
+      "fair_value_delta": 1200.0,
+      "status": "settled",
+      "created_at": "2026-07-01"
+    },
+    {
+      "id": "MCH-002",
+      "sme_a": "GrainPro Foods",
+      "commodity_a": "Wheat, US HRW",
+      "quantity_a": 100.0,
+      "sme_b": "NorthFarm Ltd",
+      "commodity_b": "Maize",
+      "quantity_b": 95.0,
+      "fair_value_delta": -800.0,
+      "status": "pending",
+      "created_at": "2026-07-03"
+    },
+    {
+      "id": "MCH-003",
+      "sme_a": "IronWorks Glasgow",
+      "commodity_a": "Iron ore, cfr spot",
+      "quantity_a": 200.0,
+      "sme_b": "SteelCo Leeds",
+      "commodity_b": "Coal, Australian",
+      "quantity_b": 180.0,
+      "fair_value_delta": 3400.0,
+      "status": "settled",
+      "created_at": "2026-06-28"
+    },
+    {
+      "id": "MCH-004",
+      "sme_a": "PalmTrade UK",
+      "commodity_a": "Palm oil",
+      "quantity_a": 30.0,
+      "sme_b": "SoySource Ltd",
+      "commodity_b": "Soybeans",
+      "quantity_b": 28.0,
+      "fair_value_delta": 200.0,
+      "status": "settled",
+      "created_at": "2026-06-25"
+    },
+    {
+      "id": "MCH-005",
+      "sme_a": "EnergyFirst Ltd",
+      "commodity_a": "Natural gas, Europe",
+      "quantity_a": 500.0,
+      "sme_b": "CoalTrade Birmingham",
+      "commodity_b": "Coal, Australian",
+      "quantity_b": 450.0,
+      "fair_value_delta": -1100.0,
+      "status": "cancelled",
+      "created_at": "2026-06-20"
+    }
+  ]
+}

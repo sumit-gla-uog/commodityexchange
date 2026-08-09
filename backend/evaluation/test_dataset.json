@@ -1,0 +1,84 @@
+{
+  "test_cases": [
+    {
+      "question": "Should I buy copper now or wait for prices to drop?",
+      "ground_truth": "Based on recent data, copper prices have been volatile. A procurement manager should consider current price trends and their immediate inventory needs before deciding."
+    },
+    {
+      "question": "What is the current price trend for wheat?",
+      "ground_truth": "Wheat prices have decreased significantly from their 2022 peak following the Russia-Ukraine war and have been relatively stable in 2025-2026."
+    },
+    {
+      "question": "How has crude oil price changed in the last 12 months?",
+      "ground_truth": "Crude oil Brent prices peaked in early 2026 and have since declined. Procurement managers should monitor geopolitical factors affecting supply."
+    },
+    {
+      "question": "Is now a good time to procure aluminum for manufacturing?",
+      "ground_truth": "Aluminum prices have shown a downward trend recently. This may present a buying opportunity for manufacturing SMEs with immediate requirements."
+    },
+    {
+      "question": "What is the price of natural gas in Europe?",
+      "ground_truth": "Natural gas prices in Europe have been elevated since the Russia-Ukraine conflict disrupted supply, though prices have moderated from 2022 peaks."
+    },
+    {
+      "question": "How have nickel prices changed recently?",
+      "ground_truth": "Nickel prices have experienced significant volatility due to supply disruptions and changing demand from the electric vehicle sector."
+    },
+    {
+      "question": "Should I stock up on palm oil before prices rise?",
+      "ground_truth": "Palm oil prices depend on Southeast Asian production and weather conditions. Current trend analysis from World Bank data can help inform procurement timing."
+    },
+    {
+      "question": "What is the price difference between soybeans and maize?",
+      "ground_truth": "Soybeans are typically priced higher per metric ton than maize. Both are influenced by US agricultural conditions and global demand patterns."
+    },
+    {
+      "question": "How has the Russia-Ukraine war affected wheat procurement for UK SMEs?",
+      "ground_truth": "The Russia-Ukraine war caused wheat prices to spike over 40 percent in 2022. Prices have since stabilised but remain above pre-war levels, affecting food processing SMEs."
+    },
+    {
+      "question": "What is the current price of coal?",
+      "ground_truth": "Australian coal prices have moderated from their 2022 energy crisis peaks but remain elevated compared to pre-2020 levels."
+    },
+    {
+      "question": "Should I buy zinc now for my manufacturing operations?",
+      "ground_truth": "Zinc prices have shown a declining trend. Manufacturing SMEs should evaluate their stock levels against current prices before committing to large purchases."
+    },
+    {
+      "question": "How does copper price compare to aluminum for electrical applications?",
+      "ground_truth": "Copper is significantly more expensive than aluminum per metric ton. Aluminum is often used as a substitute in electrical applications where weight is a factor."
+    },
+    {
+      "question": "What is the price trend for iron ore?",
+      "ground_truth": "Iron ore prices have declined from their peaks and are influenced by Chinese steel demand and Australian and Brazilian supply."
+    },
+    {
+      "question": "Is sugar price expected to rise or fall?",
+      "ground_truth": "Sugar prices are influenced by Brazilian production, weather patterns, and ethanol demand. Recent data shows moderate price levels compared to historical highs."
+    },
+    {
+      "question": "How much has lead price changed in the last year?",
+      "ground_truth": "Lead prices have been relatively stable compared to other metals. The battery manufacturing sector is the primary demand driver."
+    },
+    {
+      "question": "What commodities have seen the biggest price drops recently?",
+      "ground_truth": "Based on World Bank data, natural gas, wheat, and certain agricultural commodities have seen significant price reductions from their 2022 peaks."
+    },
+    {
+      "question": "Should a food processing SME hedge against wheat price increases?",
+      "ground_truth": "Food processing SMEs with high wheat dependency should consider forward purchasing or supplier contracts given historical price volatility driven by geopolitical events."
+    },
+    {
+      "question": "What is the best commodity to buy for barter exchange with steel?",
+      "ground_truth": "Commodities commonly exchanged with steel include iron ore, coal, and aluminum. Fair value should be calculated based on current World Bank prices."
+    },
+    {
+      "question": "How has nickel price affected battery manufacturing costs?",
+      "ground_truth": "Nickel price volatility directly impacts battery manufacturing costs. Prices spiked significantly in 2022 and have since moderated but remain a key cost driver."
+    },
+    {
+      "question": "What is the monthly price change for copper in the most recent month?",
+      "ground_truth": "The most recent World Bank Pink Sheet data shows copper price and its month-on-month percentage change which procurement managers should use for timing decisions."
+    }
+  ]
+}
