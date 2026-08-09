@@ -241,7 +241,8 @@ export const EvaluationsPage = () => {
       <FlexLayout direction='row' style={{ gap: '16px' }}>
 
         {/* Metric Scores Overview */}
-        <FlexItem grow={1}>
+        {/* <FlexItem grow={1}> */}
+        <FlexItem >
           <Card style={{ backgroundColor: '#1f2937', border: '1px solid #374151' }}>
             <HighchartsReact.default
               key={`chart-${results.faithfulness}`}
