@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Card, StackLayout, FlowLayout, GridLayout, GridItem, Text, FlexLayout, FlexItem } from '@salt-ds/core'
+import { Card, StackLayout, FlowLayout, Text, FlexLayout, FlexItem } from '@salt-ds/core'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { AgGridReact } from 'ag-grid-react'
 import { themeQuartz } from 'ag-grid-community'
+import type { ColDef } from 'ag-grid-community'
 
 interface PerQuestion {
   question: string
@@ -112,7 +113,7 @@ export const EvaluationsPage = () => {
       .catch(() => setGuardrailLogs(FALLBACK_GUARDRAIL_LOGS))
   }, [])
 
-  const columnDefs = useMemo(() => [
+  const columnDefs = useMemo((): ColDef<PerQuestion>[] => [
     {
       headerName: '#',
       valueGetter: (p: any) => p.node.rowIndex + 1,
@@ -190,7 +191,7 @@ export const EvaluationsPage = () => {
       }]
     },
     series: [{
-      type: 'column',
+      type: 'column' as const,
       name: 'Score',
       data: results ? [
         { y: results.faithfulness, color: results.faithfulness >= 0.7 ? '#22c55e' : '#f59e0b' },
@@ -202,9 +203,9 @@ export const EvaluationsPage = () => {
       dataLabels: {
         enabled: true,
         style: { color: '#ffffff', fontWeight: '600', fontSize: '11px' },
-        formatter: function () { return (this.y as number).toFixed(2) }
+        formatter: function (this: any) { return (this.y as number).toFixed(2) }
       }
-    }],
+    } as Highcharts.SeriesColumnOptions],
     legend: { enabled: false },
     credits: { enabled: false },
     tooltip: {
@@ -244,7 +245,7 @@ export const EvaluationsPage = () => {
         {/* <FlexItem grow={1}> */}
         <FlexItem >
           <Card style={{ backgroundColor: '#1f2937', border: '1px solid #374151' }}>
-            <HighchartsReact.default
+            <HighchartsReact
               key={`chart-${results.faithfulness}`}
               highcharts={Highcharts}
               options={chartOptions}

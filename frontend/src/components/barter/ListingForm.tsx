@@ -97,7 +97,7 @@ export const ListingForm = () => {
           />
         </div>
 
-        <Button type="submit" sentiment="accented">
+        <Button type="submit" variant="primary">
           Create Listing
         </Button>
       </form>

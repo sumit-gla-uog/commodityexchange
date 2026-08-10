@@ -5,7 +5,7 @@ import { ListingsTable } from '../../components/barter/ListingTable'
 import { MatchResult } from '../../components/barter/MatchResult'
 
 export const BarterPage = () => {
-  const [matchResult, setMatchResult] = useState(null)
+  const [matchResult, setMatchResult] = useState<any>(null)
 
   return (
     <div className="flex flex-col gap-6">

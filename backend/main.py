@@ -13,7 +13,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",    # React dev server
         "http://localhost:5173",
-        "https://commodex.netlify.app"  # Production
+        "https://commodityexchange.netlify.app"  # Production
+        
     ],
     allow_credentials=True,
     allow_methods=["*"],
