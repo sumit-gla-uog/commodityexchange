@@ -42,7 +42,7 @@ export const PriceChart = ({ commodity }: PriceChartProps) => {
 
   return (
     <div className="rounded-lg border border-gray-700 bg-gray-800 p-4">
-      <HighchartsReact.default highcharts={Highcharts} options={options} />
+      <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   )
 }

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { Text } from '@salt-ds/core'
 import { AgGridReact } from 'ag-grid-react'
 import { themeQuartz } from 'ag-grid-community'
+import type { ColDef } from 'ag-grid-community'
 
 interface Order {
   id: string
@@ -54,7 +55,7 @@ export const OrdersPage = () => {
     .filter(o => o.status === 'settled')
     .reduce((sum, o) => sum + Math.abs(o.fair_value_delta), 0)
 
-  const columnDefs = useMemo(() => [
+  const columnDefs = useMemo((): ColDef<Order>[] => [
     { field: 'id', headerName: 'Match ID', width: 120 },
     { field: 'sme_a', headerName: 'SME A', flex: 1 },
     { field: 'commodity_a', headerName: 'Commodity A', flex: 1 },

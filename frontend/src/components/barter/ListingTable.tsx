@@ -35,7 +35,7 @@ export const ListingsTable = ({ onMatch }: ListingsTableProps) => {
         <Text styleAs="h3" className="text-white font-bold">
           Active Listings
         </Text>
-        <Button onClick={fetchListings} sentiment="accented">
+        <Button onClick={fetchListings} variant="primary">
           {loading ? 'Loading...' : 'Refresh'}
         </Button>
       </div>
@@ -66,7 +66,7 @@ export const ListingsTable = ({ onMatch }: ListingsTableProps) => {
                 </div>
                 <Button
                   onClick={() => findMatch(listing.id)}
-                  sentiment="positive"
+                  variant="primary"
                 >
                   Find Match
                 </Button>

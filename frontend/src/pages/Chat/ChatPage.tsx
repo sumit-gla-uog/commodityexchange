@@ -84,7 +84,7 @@ export const ChatPage = () => {
           placeholder="Ask about commodity prices..."
           className="flex-1 bg-gray-800 border border-gray-600 rounded px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
         />
-        <Button onClick={sendMessage} sentiment="accented" disabled={loading}>
+        <Button onClick={sendMessage} variant="primary" disabled={loading}>
           Send
         </Button>
       </div>
