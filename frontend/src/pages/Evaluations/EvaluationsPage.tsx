@@ -5,6 +5,7 @@ import HighchartsReact from 'highcharts-react-official'
 import { AgGridReact } from 'ag-grid-react'
 import { themeQuartz } from 'ag-grid-community'
 import type { ColDef } from 'ag-grid-community'
+import { BASE_URL } from '../../api/client'
 
 interface PerQuestion {
   question: string
@@ -102,12 +103,12 @@ export const EvaluationsPage = () => {
   const [guardrailLogs, setGuardrailLogs] = useState<GuardrailLog[]>([])
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/evals')
+    fetch(`${BASE_URL}/api/evals`)
       .then(res => res.json())
       .then(data => setResults(data))
       .catch(() => setResults(null))
 
-    fetch('http://localhost:8000/api/guardrails/log')
+    fetch(`${BASE_URL}/api/guardrails/log`)
       .then(res => res.json())
       .then(data => setGuardrailLogs(data.logs ?? FALLBACK_GUARDRAIL_LOGS))
       .catch(() => setGuardrailLogs(FALLBACK_GUARDRAIL_LOGS))

@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { Button, Text } from '@salt-ds/core'
+import { BASE_URL } from '../../api/client'
 
 const COMMODITIES = [
   'Copper', 'Aluminum', 'Nickel', 'Zinc', 'Lead',
@@ -21,7 +22,7 @@ export const ListingForm = () => {
   const { register, handleSubmit, reset } = useForm<ListingFormData>()
 
   const onSubmit = async (data: ListingFormData) => {
-    await fetch('http://localhost:8000/api/barter/listings', {
+    await fetch(`${BASE_URL}/api/barter/listings`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)

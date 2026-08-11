@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Button, Text } from '@salt-ds/core'
 import type { ChatMessage } from '../../types/commodity'
+import { BASE_URL } from '../../api/client'
 
 export const ChatPage = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -27,7 +28,7 @@ export const ChatPage = () => {
 
     try {
       // const res = await fetch('http://localhost:8000/api/chat/', {
-       const res = await fetch('http://localhost:8000/api/chat/agentic', {
+       const res = await fetch(`${BASE_URL}/api/chat/agentic`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: input })
