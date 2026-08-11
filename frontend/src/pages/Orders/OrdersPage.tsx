@@ -3,6 +3,7 @@ import { Text } from '@salt-ds/core'
 import { AgGridReact } from 'ag-grid-react'
 import { themeQuartz } from 'ag-grid-community'
 import type { ColDef } from 'ag-grid-community'
+import { BASE_URL } from '../../api/client'
 
 interface Order {
   id: string
@@ -44,7 +45,7 @@ export const OrdersPage = () => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/orders/')
+    fetch(`${BASE_URL}/api/orders/`)
       .then(res => res.json())
       .then(data => setOrders(data.orders))
   }, [])
