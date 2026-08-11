@@ -1,6 +1,7 @@
 import { useState,useEffect } from 'react'
 import { Button, Text } from '@salt-ds/core'
 import type { BarterListing, MatchResult } from '../../types/commodity'
+import { BASE_URL } from '../../api/client'
 
 interface ListingsTableProps {
   onMatch: (result: MatchResult) => void
@@ -12,7 +13,7 @@ export const ListingsTable = ({ onMatch }: ListingsTableProps) => {
 
   const fetchListings = async () => {
     setLoading(true)
-    const res = await fetch('http://localhost:8000/api/barter/listings')
+    const res = await fetch(`${BASE_URL}/api/barter/listings`)
     const data = await res.json()
     setListings(data.listings)
     setLoading(false)
@@ -22,7 +23,7 @@ export const ListingsTable = ({ onMatch }: ListingsTableProps) => {
 }, [])
 
   const findMatch = async (id: string) => {
-    const res = await fetch(`http://localhost:8000/api/barter/match/${id}`, {
+    const res = await fetch(`${BASE_URL}/api/barter/match/${id}`, {
       method: 'POST'
     })
     const data = await res.json()
