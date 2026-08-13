@@ -45,7 +45,7 @@ export const ChatPage = () => {
   return (
     <div className="flex flex-col h-[85vh]">
       <Text styleAs="h2" className="text-white font-bold mb-4">
-        Commodity Intelligence Chat
+        Commodity Intelligence Expert Advice
       </Text>
 
       {/* Messages */}
