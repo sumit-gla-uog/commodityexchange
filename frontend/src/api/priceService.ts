@@ -3,7 +3,7 @@ import { fetcher } from './client'
 import type { CommodityPrice } from '../types/commodity'
 
 export const usePrices = () => {
-  const { data, error, isLoading } = useSWR<{ commodities: CommodityPrice[] }>(
+  const { data, error, isLoading, mutate } = useSWR<{ commodities: CommodityPrice[] }>(
     '/api/prices/historical',
     fetcher
   )
@@ -12,5 +12,6 @@ export const usePrices = () => {
     commodities: data?.commodities ?? [],
     isLoading,
     isError: !!error,
+    mutate
   }
 }
