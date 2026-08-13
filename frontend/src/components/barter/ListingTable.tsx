@@ -1,4 +1,4 @@
-import { useState,useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Text } from '@salt-ds/core'
 import type { BarterListing, MatchResult } from '../../types/commodity'
 import { BASE_URL } from '../../api/client'
@@ -19,8 +19,8 @@ export const ListingsTable = ({ onMatch }: ListingsTableProps) => {
     setLoading(false)
   }
   useEffect(() => {
-  fetchListings()
-}, [])
+    fetchListings()
+  }, [])
 
   const findMatch = async (id: string) => {
     const res = await fetch(`${BASE_URL}/api/barter/match/${id}`, {
@@ -36,9 +36,26 @@ export const ListingsTable = ({ onMatch }: ListingsTableProps) => {
         <Text styleAs="h3" className="text-white font-bold">
           Active Listings
         </Text>
-        <Button onClick={fetchListings} variant="primary">
+        {/* <Button onClick={fetchListings} variant="primary">
           {loading ? 'Loading...' : 'Refresh'}
-        </Button>
+        </Button> */}
+
+        <button
+          type="submit"
+          onClick={fetchListings}
+          style={{
+            backgroundColor: '#22c55e',
+            color: '#000000',
+            border: 'none',
+            borderRadius: '6px',
+            padding: '10px 20px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+        >
+          {loading ? 'Loading...' : 'Refresh'}
+        </button>
       </div>
 
       {listings.length === 0 ? (
@@ -65,12 +82,29 @@ export const ListingsTable = ({ onMatch }: ListingsTableProps) => {
                     {listing.location_uk}
                   </Text>
                 </div>
-                <Button
+                {/* <Button
                   onClick={() => findMatch(listing.id)}
                   variant="primary"
                 >
                   Find Match
-                </Button>
+                </Button> */}
+
+                <button
+                  type="submit"
+                  onClick={() => findMatch(listing.id)}
+                  style={{
+                    backgroundColor: '#22c55e',
+                    color: '#000000',
+                    border: 'none',
+                    borderRadius: '6px',
+                    padding: '10px 20px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    fontSize: '14px'
+                  }}
+                >
+                  Find Match
+                </button>
               </div>
             </div>
           ))}
