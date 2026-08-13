@@ -10,7 +10,7 @@ const navItems = [
   { path: '/barter', label: 'Barter', icon: <SwapIcon /> },
   { path: '/evals', label: 'Evaluations', icon: <ChartScatterIcon /> },
   { path: '/orders', label: 'Orders', icon: <DocumentIcon /> },
-  { path: '/chat', label: 'Chat', icon: <ChatIcon /> },
+  { path: '/chat', label: 'Expert Advice', icon: <ChatIcon /> },
 ]
 
 export const Sidebar = () => {
