@@ -1,12 +1,9 @@
-import { NavigationItem } from '@salt-ds/core'
-import {
-  DashboardIcon,
-  SwapIcon,
-  ChatIcon,
-  ChartScatterIcon,
-  DocumentIcon,
-} from '@salt-ds/icons'
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import {
+  DashboardIcon, SwapIcon, ChatIcon,
+  ChartScatterIcon, DocumentIcon, MenuIcon
+} from '@salt-ds/icons'
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
@@ -17,36 +14,82 @@ const navItems = [
 ]
 
 export const Sidebar = () => {
+  const [collapsed, setCollapsed] = useState(false)
+
   return (
-    <aside className="w-64 min-h-screen bg-[#1F4E79] flex flex-col">
-      {/* Logo */}
-      <div className="p-6 border-b border-blue-700">
-        <h1 className="text-xl font-bold text-white">CommodEx</h1>
-        <p className="text-xs text-blue-300 mt-1">Commodity Exchange Platform</p>
+    <aside style={{
+      width: collapsed ? '64px' : '240px',
+      minHeight: '100vh',
+      backgroundColor: '#1F4E79',
+      display: 'flex',
+      flexDirection: 'column',
+      transition: 'width 0.3s ease',
+      flexShrink: 0
+    }}>
+      {/* Logo + Toggle */}
+      <div style={{
+        padding: '20px 16px',
+        borderBottom: '1px solid #1e4a75',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: collapsed ? 'center' : 'space-between'
+      }}>
+        {!collapsed && (
+          <div>
+            <h1 style={{ color: '#ffffff', fontSize: '18px', fontWeight: 'bold', margin: 0 }}>CommodEx</h1>
+            <p style={{ color: '#93c5fd', fontSize: '11px', margin: '2px 0 0 0' }}>Commodity Exchange</p>
+          </div>
+        )}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: '#93c5fd',
+            cursor: 'pointer',
+            padding: '4px',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          <MenuIcon />
+        </button>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 p-4 flex flex-col gap-1">
+      <nav style={{ flex: 1, padding: '12px 8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
         {navItems.map((item) => (
-          <NavLink key={item.path} to={item.path}>
+          <NavLink key={item.path} to={item.path} style={{ textDecoration: 'none' }}>
             {({ isActive }) => (
-              <NavigationItem
-                active={isActive}
-                className="w-full"
-              >
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: collapsed ? '10px' : '10px 12px',
+                borderRadius: '8px',
+                backgroundColor: isActive ? '#ffffff' : 'transparent',
+                color: isActive ? '#1F4E79' : '#bfdbfe',
+                cursor: 'pointer',
+                justifyContent: collapsed ? 'center' : 'flex-start',
+                transition: 'background-color 0.2s'
+              }}>
                 {item.icon}
-                {item.label}
-              </NavigationItem>
+                {!collapsed && (
+                  <span style={{ fontSize: '14px', fontWeight: '500' }}>{item.label}</span>
+                )}
+              </div>
             )}
           </NavLink>
         ))}
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-blue-700">
-        <p className="text-xs text-blue-300">MSc Dissertation 2025-26</p>
-        <p className="text-xs text-blue-300">University of Glasgow</p>
-      </div>
+      {!collapsed && (
+        <div style={{ padding: '16px', borderTop: '1px solid #1e4a75' }}>
+          <p style={{ color: '#93c5fd', fontSize: '11px', margin: 0 }}>MSc Dissertation 2025-26</p>
+          <p style={{ color: '#93c5fd', fontSize: '11px', margin: '2px 0 0 0' }}>University of Glasgow</p>
+        </div>
+      )}
     </aside>
   )
 }
