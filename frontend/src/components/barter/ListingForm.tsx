@@ -98,9 +98,22 @@ export const ListingForm = () => {
           />
         </div>
 
-        <Button type="submit" variant="primary">
+        <button
+          type="submit"
+          style={{
+            backgroundColor: '#22c55e',
+            color: '#000000',
+            border: 'none',
+            borderRadius: '6px',
+            padding: '10px 20px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            width: '100%',
+            fontSize: '14px'
+          }}
+        >
           Create Listing
-        </Button>
+        </button>
       </form>
     </div>
   )
