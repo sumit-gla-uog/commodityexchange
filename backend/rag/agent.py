@@ -46,7 +46,9 @@ def get_historical_context(query: str) -> str:
             headers=HF_HEADERS,
             json={"inputs": [query], "options": {"wait_for_model": True}}
         )
+        # print('response from new qwen model-', response)
         embedding = response.json()[0]
+        # print('embedding from new qwen model-', embedding)
 
         client = chromadb.PersistentClient(path=CHROMA_DIR)
         collection = client.get_collection(COLLECTION_NAME)
@@ -127,7 +129,7 @@ def get_commodity_news(commodity: str) -> str:
 # AGENT SETUP
 def create_commodity_agent():
     llm = ChatGroq(
-        model="llama-3.3-70b-versatile",
+        model="qwen/qwen3.6-27b",
         api_key=os.getenv("GROQ_API_KEY"),
         temperature=0.2
     )

@@ -1,35 +1,18 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-import json
-import os
+from db.client import get_supabase
 import pandas as pd
+import os
 
 router = APIRouter()
 
-# TODO: I will replace mock data with Supabase database connection
-# Mock data is used for prototype demo purposes only
-# See mock_data.json for data structure reference
-MOCK_DATA_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    "mock_data.json"
-)
-
-# World Bank CSV for fair value calculation
 CSV_PATH = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     "data", "worldbank_clean.csv"
 )
 
 
-def load_listings():
-    # TODO: Replace with Supabase query,  supabase.table("listings").select("*").execute()
-    with open(MOCK_DATA_PATH, "r") as f:
-        data = json.load(f)
-    return data["listings"]
-
-
 def get_latest_price(commodity: str):
-    # Get latest price from World Bank CSV for fair value calculation
     df = pd.read_csv(CSV_PATH)
     if commodity not in df.columns:
         return None
@@ -63,7 +46,6 @@ def calculate_fair_value(listing_a: dict, listing_b: dict):
     }
 
 
-# Request model for creating a listing
 class ListingRequest(BaseModel):
     sme_name: str
     commodity_offered: str
@@ -75,68 +57,65 @@ class ListingRequest(BaseModel):
 
 @router.get("/listings")
 def get_listings(status: str = "active"):
-    # TODO: Replace with Supabase query filtered by status
-    listings = load_listings()
-    return {"listings": [l for l in listings if l["status"] == status]}
+    supabase = get_supabase()
+    response = supabase.table("listings").select("*").eq("status", status).execute()
+    return {"listings": response.data}
 
 
 @router.post("/listings")
 def create_listing(request: ListingRequest):
-    # TODO: Replace with Supabase insert, supabase.table("listings").insert({...}).execute()
-    # Mock response for prototype demo
-    return {
-        "id": "uuid-mock-new",
-        "message": "Listing created successfully",
-        "status": "active",
-        "data": request.dict()
+    supabase = get_supabase()
+    data = {
+        "sme_name": request.sme_name,
+        "commodity_offered": request.commodity_offered,
+        "quantity_offered_mt": request.quantity_offered_mt,
+        "commodity_wanted": request.commodity_wanted,
+        "quantity_wanted_mt": request.quantity_wanted_mt,
+        "location_uk": request.location_uk,
+        "status": "active"
     }
+    response = supabase.table("listings").insert(data).execute()
+    return {"message": "Listing created", "data": response.data[0]}
 
 
 @router.get("/listings/{listing_id}")
 def get_listing(listing_id: str):
-    # TODO: Will replace with Supabase query by id
-    listings = load_listings()
-    listing = next((l for l in listings if l["id"] == listing_id), None)
-    if not listing:
+    supabase = get_supabase()
+    response = supabase.table("listings").select("*").eq("id", listing_id).execute()
+    if not response.data:
         raise HTTPException(status_code=404, detail="Listing not found")
-    return listing
+    return response.data[0]
 
 
 @router.post("/match/{listing_id}")
 def match_listing(listing_id: str):
-    # TODO: Replace with Supabase query for matching
-    listings = load_listings()
+    supabase = get_supabase()
 
-    # Find the listing to match
-    source = next((l for l in listings if l["id"] == listing_id), None)
-    if not source:
+    # Get source listing
+    source_res = supabase.table("listings").select("*").eq("id", listing_id).execute()
+    if not source_res.data:
         raise HTTPException(status_code=404, detail="Listing not found")
+    source = source_res.data[0]
 
-    # Rule-based matching algorithm
-    # Rule 1: commodity_offered matches commodity_wanted and vice versa
-    # Rule 2: quantity within 20% tolerance
-    # Rule 3: status must be active
-    # Rule 4: no self match
+    # Get all active listings
+    all_res = supabase.table("listings").select("*").eq("status", "active").execute()
+    listings = all_res.data
+
     matches = []
     for listing in listings:
         if listing["id"] == source["id"]:
-            continue
-        if listing["status"] != "active":
             continue
         if listing["commodity_offered"] != source["commodity_wanted"]:
             continue
         if listing["commodity_wanted"] != source["commodity_offered"]:
             continue
 
-        # Quantity tolerance check within 20 percent
         qty_diff = abs(listing["quantity_offered_mt"] - source["quantity_wanted_mt"])
         qty_max = max(listing["quantity_offered_mt"], source["quantity_wanted_mt"])
         if (qty_diff / qty_max) > 0.20:
             continue
 
-        # Fair value calculation
         fair_value = calculate_fair_value(source, listing)
-
         matches.append({
             "matched_listing": listing,
             "fair_value": fair_value
@@ -145,38 +124,22 @@ def match_listing(listing_id: str):
     if not matches:
         return {"message": "No matches found", "matches": []}
 
-    if not matches:
-        return {"message": "No matches found", "matches": []}
-
-    # TODO: Auto-create order in Supabase when match is found
-    mock_order = {
-        "id": f"MCH-{listing_id[-4:]}",
-        "sme_a": source["sme_name"],
-        "commodity_a": source["commodity_offered"],
-        "quantity_a": source["quantity_offered_mt"],
-        "sme_b": matches[0]["matched_listing"]["sme_name"],
-        "commodity_b": matches[0]["matched_listing"]["commodity_offered"],
-        "quantity_b": matches[0]["matched_listing"]["quantity_offered_mt"],
-        "fair_value_delta": matches[0]["fair_value"]["delta_usd"] if matches[0]["fair_value"] else 0,
-        "status": "pending",
-        "created_at": "2026-07-30"
-    }
-
-    return {
-        "source_listing": source,
-        "matches": matches,
-        "total_matches": len(matches),
-        "order_created": mock_order
-    }
+    # Create order in Supabase
+    if matches:
+        order_data = {
+            "party_a_name": source["sme_name"],
+            "party_a_commodity": source["commodity_offered"],
+            "party_a_quantity": source["quantity_offered_mt"],
+            "party_b_name": matches[0]["matched_listing"]["sme_name"],
+            "party_b_commodity": matches[0]["matched_listing"]["commodity_offered"],
+            "party_b_quantity": matches[0]["matched_listing"]["quantity_offered_mt"],
+            "fair_value_delta": matches[0]["fair_value"]["delta_usd"] if matches[0]["fair_value"] else 0,
+            "status": "pending"
+        }
+        supabase.table("orders").insert(order_data).execute()
 
     return {
         "source_listing": source,
         "matches": matches,
         "total_matches": len(matches)
     }
-
-
-# if matches:
-#     # TODO: Auto_create order in Supabase when match is found
-#     # For now mock response only
-#     pass

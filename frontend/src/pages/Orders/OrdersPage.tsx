@@ -7,12 +7,12 @@ import { BASE_URL } from '../../api/client'
 
 interface Order {
   id: string
-  sme_a: string
-  commodity_a: string
-  quantity_a: number
-  sme_b: string
-  commodity_b: string
-  quantity_b: number
+  party_a_name: string
+  party_a_commodity: string
+  party_a_quantity: number
+  party_b_name: string
+  party_b_commodity: string
+  party_b_quantity: number
   fair_value_delta: number
   status: string
   created_at: string
@@ -58,18 +58,18 @@ export const OrdersPage = () => {
 
   const columnDefs = useMemo((): ColDef<Order>[] => [
     { field: 'id', headerName: 'Match ID', width: 120 },
-    { field: 'sme_a', headerName: 'SME A', flex: 1 },
-    { field: 'commodity_a', headerName: 'Commodity A', flex: 1 },
+    { field: 'party_a_name', headerName: 'Party A', flex: 1 },
+    { field: 'party_a_commodity', headerName: 'Commodity A', flex: 1 },
     {
-      field: 'quantity_a',
+      field: 'party_a_quantity',
       headerName: 'Qty A',
       width: 100,
       valueFormatter: (p: any) => `${p.value} mt`
     },
-    { field: 'sme_b', headerName: 'SME B', flex: 1 },
-    { field: 'commodity_b', headerName: 'Commodity B', flex: 1 },
+    { field: 'party_b_name', headerName: 'Party B', flex: 1 },
+    { field: 'party_b_commodity', headerName: 'Commodity B', flex: 1 },
     {
-      field: 'quantity_b',
+      field: 'party_b_quantity',
       headerName: 'Qty B',
       width: 100,
       valueFormatter: (p: any) => `${p.value} mt`
@@ -151,7 +151,7 @@ export const OrdersPage = () => {
         </div>
       </div>
 
-      {/* Settlement Summary — AG Grid ke BAHAR */}
+      {/* Settlement Summary || outside of AG Grid  */}
       {selectedOrder && (
         <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
           <div className="flex justify-between items-center mb-4">
@@ -166,13 +166,13 @@ export const OrdersPage = () => {
           <div className="grid grid-cols-4 gap-4 mb-4">
             <div className="bg-gray-900 rounded p-4">
               <p className="text-gray-400 text-xs uppercase mb-1">Commodity A</p>
-              <p className="text-white font-semibold">{selectedOrder.commodity_a}</p>
-              <p className="text-gray-400 text-xs">{selectedOrder.quantity_a} mt</p>
+              <p className="text-white font-semibold">{selectedOrder.party_a_commodity}</p>
+              <p className="text-gray-400 text-xs">{selectedOrder.party_a_quantity} mt · {selectedOrder.party_a_name}</p>
             </div>
             <div className="bg-gray-900 rounded p-4">
               <p className="text-gray-400 text-xs uppercase mb-1">Commodity B</p>
-              <p className="text-white font-semibold">{selectedOrder.commodity_b}</p>
-              <p className="text-gray-400 text-xs">{selectedOrder.quantity_b} mt</p>
+              <p className="text-white font-semibold">{selectedOrder.party_b_commodity}</p>
+              <p className="text-gray-400 text-xs">{selectedOrder.party_b_quantity} mt · {selectedOrder.party_b_name}</p>
             </div>
             <div className="bg-gray-900 rounded p-4">
               <p className="text-gray-400 text-xs uppercase mb-1">Fair Value</p>
