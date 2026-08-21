@@ -32,6 +32,7 @@ class ChatResponse(BaseModel):
 def chat(request: ChatRequest):
     try:
         # Input guards || topic + toxicity check
+        
         guard_result = run_all_guards(query=request.query)
         
         if not guard_result["overall_passed"]:
@@ -64,7 +65,9 @@ def chat(request: ChatRequest):
 def agentic_chat(request: ChatRequest):
     try:
         # Run all guardrails first
+        # print('agentic_chat called with:', request.query)
         guard_result = run_all_guards(query=request.query)
+        # print('guard_result:', guard_result)
 
         if not guard_result["overall_passed"]:
             return ChatResponse(

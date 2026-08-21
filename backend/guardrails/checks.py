@@ -6,6 +6,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+import re
+
+def parse_json_response(text: str) -> dict:
+    # Removed <think>...</think> blocks
+    text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL).strip()
+    # Extract JSON object
+    match = re.search(r'\{.*\}', text, re.DOTALL)
+    if match:
+        return json.loads(match.group())
+    return json.loads(text)
 
 def get_groq_client():
     return Groq(api_key=os.getenv("GROQ_API_KEY"))
@@ -15,8 +25,10 @@ def topic_guard(query: str) -> dict:
     """
     LLM-based topic guard - checks if query is commodity/procurement related
     """
-    client = get_groq_client()
 
+    # print('topic_guard called with:', query)
+    client = get_groq_client()
+    # print('get groq client---',client)
     prompt = f"""You are a topic classifier for CommodEx, a B2B commodity intelligence platform for UK industrial SMEs.
 
 Determine if this query is related to:
@@ -32,13 +44,16 @@ Reply with ONLY a JSON object, no extra text:
 {{"is_relevant": true or false, "reason": "brief explanation in one sentence"}}"""
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="qwen/qwen3.6-27b",
         messages=[{"role": "user", "content": prompt}],
         temperature=0,
-        max_tokens=100
+        # max_tokens=100
+        max_tokens=500
     )
-
-    result = json.loads(response.choices[0].message.content)
+    # print('result from model---',response)
+    # result = json.loads(response.choices[0].message.content)
+    result = parse_json_response(response.choices[0].message.content)
+    # print('result from model---',result)
 
     return {
         "passed": result["is_relevant"],
@@ -76,13 +91,15 @@ Reply with ONLY a JSON object, no extra text:
 {{"is_grounded": true or false, "confidence": "high/medium/low", "reason": "brief explanation in one sentence"}}"""
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="qwen/qwen3.6-27b",
         messages=[{"role": "user", "content": prompt}],
         temperature=0,
-        max_tokens=150
+        # max_tokens=150
+         max_tokens=500
     )
 
-    result = json.loads(response.choices[0].message.content)
+    # result = json.loads(response.choices[0].message.content)
+    result = parse_json_response(response.choices[0].message.content)
 
     return {
         "passed": result["is_grounded"],
@@ -108,13 +125,16 @@ Reply with ONLY a JSON object, no extra text:
 {{"is_toxic": true or false, "reason": "brief explanation in one sentence"}}"""
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="qwen/qwen3.6-27b",
         messages=[{"role": "user", "content": prompt}],
         temperature=0,
-        max_tokens=100
+        # max_tokens=100
+        max_tokens=500
     )
-
-    result = json.loads(response.choices[0].message.content)
+    raw = response.choices[0].message.content
+    # print('TOXICITY RAW RESPONSE:::::', raw)
+    # result = json.loads(response.choices[0].message.content)
+    result = parse_json_response(response.choices[0].message.content)
 
     return {
         "passed": not result["is_toxic"],
@@ -151,7 +171,10 @@ def run_all_guards(query: str, answer: str = "", context_chunks: list = []) -> d
     Input guards run before LLM, output guards run after.
     """
     # Input guards
+    # print('run_all_guards called')
+
     toxicity_result = toxicity_guard(query)
+    # print('toxicity done:', toxicity_result)
     if not toxicity_result["passed"]:
         return {
             "query": query,
