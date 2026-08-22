@@ -7,8 +7,11 @@ import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <SaltProvider theme="dark" density="medium">
-      <App />
+    <SaltProvider theme="dark" density="medium" mode="dark">
+      <div style={{ '--salt-size-unit': '4px' } as React.CSSProperties}>
+        <App />
+      </div>
+
     </SaltProvider>
   </StrictMode>,
 )
