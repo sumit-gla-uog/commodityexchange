@@ -46,7 +46,8 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
       if (!res.ok) { setError(result.detail || 'Registration failed'); return }
       localStorage.setItem('token', result.token)
       localStorage.setItem('user', JSON.stringify(result.user))
-      navigate('/dashboard')
+      navigate('/')
+      alert('Account created! Please login.')
     } catch {
       setError('Connection error')
     } finally {
@@ -58,7 +59,7 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
     <StackLayout gap={3}>
       <StackLayout gap={0.5}>
         <Text styleAs="h2" style={{ color: '#ffffff', fontWeight: 'bold' }}>Create Account</Text>
-        <Text styleAs="label" style={{ color: '#94a3b8' }}>Join CommodEx — B2B Commodity Exchange</Text>
+        <Text styleAs="label" style={{ color: '#94a3b8' }}>Join CommodEx, B2B Commodity Exchange</Text>
       </StackLayout>
 
       <StackLayout gap={2}>
@@ -91,7 +92,18 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
           onClick={handleSubmit(onSubmit)}
           // sentiment="accented"
           disabled={loading}
-          style={{ width: '100%', padding: '12px', fontWeight: '600', fontSize: '15px' }}
+          style={{
+            width: '100%',
+            backgroundColor: '#3b82f6',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: '8px',
+            padding: '13px',
+            fontWeight: '600',
+            fontSize: '15px',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            opacity: loading ? 0.7 : 1
+          }}
         >
           {loading ? 'Creating account...' : 'Create Account'}
         </Button>

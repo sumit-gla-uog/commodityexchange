@@ -132,6 +132,7 @@ export const LandingPage = () => {
               { label: 'Copper', value: '+3.2%', color: '#22c55e' },
               { label: 'Crude Oil', value: '-0.5%', color: '#f87171' },
               { label: 'Wheat', value: '+1.8%', color: '#22c55e' },
+              { label: 'Gold', value: '+3.6%', color: '#22c55e' },
             ].map(stat => (
               <div key={stat.label} style={{
                 backgroundColor: 'rgba(0,0,0,0.7)',
