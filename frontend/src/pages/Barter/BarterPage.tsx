@@ -1,16 +1,10 @@
 import { useState } from 'react'
 import { Text } from '@salt-ds/core'
+import { useListings } from '../../hooks/useListing'
 import styles from './BarterPage.module.css'
+import { MarketListingsTab } from '../../components/barter/MarketListingsTab'
 
 type BarterTab = 'market' | 'my-listings' | 'orders'
-
-interface Listing {
-  id: string
-  commodity: string
-  quantity: string
-  location: string
-  wantedInReturn: string
-}
 
 const TABS: { id: BarterTab; label: string }[] = [
   { id: 'market', label: 'Market Listings' },
@@ -18,38 +12,23 @@ const TABS: { id: BarterTab; label: string }[] = [
   { id: 'orders', label: 'Orders & History' },
 ]
 
+const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
+
 export const BarterPage = () => {
   const [activeTab, setActiveTab] = useState<BarterTab>('market')
   const [search, setSearch] = useState('')
-  const [modalOpen, setModalOpen] = useState(false)
-  const [listings, setListings] = useState<Listing[]>([])
-  const [form, setForm] = useState({ commodity: '', quantity: '', location: '', wantedInReturn: '' })
+  const { listings, isLoading, isError, refetch } = useListings()
 
-  const handleCreateListing = () => {
-    if (!form.commodity || !form.quantity || !form.location || !form.wantedInReturn) return
-    setListings((prev) => [...prev, { id: crypto.randomUUID(), ...form }])
-    setForm({ commodity: '', quantity: '', location: '', wantedInReturn: '' })
-    setModalOpen(false)
-  }
+  const searchFilter = (l: typeof listings[number]) =>
+    l.commodity_offered.toLowerCase().includes(search.toLowerCase()) ||
+    l.commodity_wanted.toLowerCase().includes(search.toLowerCase()) ||
+    l.location_uk.toLowerCase().includes(search.toLowerCase())
 
-  const filteredListings = listings.filter((l) =>
-    l.commodity.toLowerCase().includes(search.toLowerCase()) ||
-    l.location.toLowerCase().includes(search.toLowerCase())
-  )
+  const filteredMarket = listings.filter(searchFilter)
+  const filteredMine = listings.filter((l) => l.sme_name === currentUser.sme_name).filter(searchFilter)
 
   return (
     <div className={styles.page}>
-
-       <div>
-        <Text styleAs="h2" className="text-white font-bold">
-          Barter Matching Engine
-        </Text>
-        <Text className={styles.subtitle}>
-          List surplus · Match with UK SMEs · Settle at fair value
-        </Text>
-      </div>
-
-      
       <div className={styles.tabBar}>
         {TABS.map((tab) => (
           <button
@@ -70,76 +49,24 @@ export const BarterPage = () => {
           className={styles.searchInput}
         />
         {activeTab === 'market' && (
-          <button onClick={() => setModalOpen(true)} className={styles.newListingButton}>
+          <button className={styles.newListingButton}>
             + New Listing
           </button>
         )}
       </div>
 
-      {activeTab === 'market' && (
+      {isLoading && <Text className={styles.tabContent}>Loading listings...</Text>}
+      {isError && <Text className={styles.tabContent}>Failed to load listings.</Text>}
+
+      {!isLoading && !isError && activeTab === 'market' && (
+  <MarketListingsTab listings={filteredMarket} onMatch={(id) => console.log('match', id)} />
+)}
+      {!isLoading && !isError && activeTab === 'my-listings' && (
         <Text className={styles.tabContent}>
-          {filteredListings.length === 0
-            ? 'No listings yet.'
-            : `${filteredListings.length} listing(s) found — TODO: render as table`}
+          {filteredMine.length === 0 ? "You haven't posted any listings yet." : `${filteredMine.length} listing(s)`}
         </Text>
       )}
-      {activeTab === 'my-listings' && <Text className={styles.tabContent}>My Listings — TODO</Text>}
       {activeTab === 'orders' && <Text className={styles.tabContent}>Orders & History — TODO</Text>}
-
-      {modalOpen && (
-        <div className={styles.modalOverlay} onClick={() => setModalOpen(false)}>
-          <div className={styles.modalBox} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <span className={styles.modalTitle}>List Surplus Commodity</span>
-              <button className={styles.modalClose} onClick={() => setModalOpen(false)}>×</button>
-            </div>
-
-            <div className={styles.formGrid}>
-              <div className={styles.formField}>
-                <label className={styles.formLabel}>Offering Commodity</label>
-                <input
-                  className={styles.formInput}
-                  value={form.commodity}
-                  onChange={(e) => setForm({ ...form, commodity: e.target.value })}
-                  placeholder="e.g. Aluminium"
-                />
-              </div>
-              <div className={styles.formField}>
-                <label className={styles.formLabel}>Quantity</label>
-                <input
-                  className={styles.formInput}
-                  value={form.quantity}
-                  onChange={(e) => setForm({ ...form, quantity: e.target.value })}
-                  placeholder="e.g. 150t"
-                />
-              </div>
-              <div className={styles.formField}>
-                <label className={styles.formLabel}>Location (UK)</label>
-                <input
-                  className={styles.formInput}
-                  value={form.location}
-                  onChange={(e) => setForm({ ...form, location: e.target.value })}
-                  placeholder="e.g. Sheffield"
-                />
-              </div>
-              <div className={styles.formField}>
-                <label className={styles.formLabel}>Wanted In Return</label>
-                <input
-                  className={styles.formInput}
-                  value={form.wantedInReturn}
-                  onChange={(e) => setForm({ ...form, wantedInReturn: e.target.value })}
-                  placeholder="e.g. Copper"
-                />
-              </div>
-            </div>
-
-            <div className={styles.modalActions}>
-              <button className={styles.cancelButton} onClick={() => setModalOpen(false)}>Cancel</button>
-              <button className={styles.postButton} onClick={handleCreateListing}>Post Listing</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
