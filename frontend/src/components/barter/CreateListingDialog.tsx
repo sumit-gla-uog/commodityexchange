@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BASE_URL } from '../../api/client'
+import { useCreateListing } from '../../hooks/useCreateListing'
 import styles from './CreateListingDialog.module.css'
 
 interface CreateListingDialogProps {
@@ -18,32 +18,26 @@ export const CreateListingDialog = ({ open, onClose, onSuccess }: CreateListingD
     quantity_wanted_mt: '',
     location_uk: '',
   })
-  const [submitting, setSubmitting] = useState(false)
+  const { createListing, submitting } = useCreateListing()
 
   if (!open) return null
 
   const handleSubmit = async () => {
     if (!form.commodity_offered || !form.quantity_offered_mt || !form.commodity_wanted || !form.quantity_wanted_mt || !form.location_uk) return
 
-    setSubmitting(true)
-    try {
-      await fetch(`${BASE_URL}/api/barter/listings`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sme_name: currentUser.sme_name,
-          commodity_offered: form.commodity_offered,
-          quantity_offered_mt: Number(form.quantity_offered_mt),
-          commodity_wanted: form.commodity_wanted,
-          quantity_wanted_mt: Number(form.quantity_wanted_mt),
-          location_uk: form.location_uk,
-        }),
-      })
+    const success = await createListing({
+      sme_name: currentUser.sme_name,
+      commodity_offered: form.commodity_offered,
+      quantity_offered_mt: Number(form.quantity_offered_mt),
+      commodity_wanted: form.commodity_wanted,
+      quantity_wanted_mt: Number(form.quantity_wanted_mt),
+      location_uk: form.location_uk,
+    })
+
+    if (success) {
       setForm({ commodity_offered: '', quantity_offered_mt: '', commodity_wanted: '', quantity_wanted_mt: '', location_uk: '' })
       onSuccess()
       onClose()
-    } finally {
-      setSubmitting(false)
     }
   }
 
