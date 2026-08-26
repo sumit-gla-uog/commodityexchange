@@ -12,10 +12,10 @@ ModuleRegistry.registerModules([AllCommunityModule])
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <SaltProvider theme="dark" density="medium" mode="dark">
-      <div style={{ '--salt-size-unit': '4px' } as React.CSSProperties}>
+    <SaltProvider theme="light" density="medium" mode="light">
+      {/* <div style={{ '--salt-size-unit': '4px' } as React.CSSProperties}> */}
         <App />
-      </div>
+      {/* </div> */}
 
     </SaltProvider>
   </StrictMode>,

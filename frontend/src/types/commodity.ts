@@ -59,3 +59,12 @@ export interface ChatResponse {
   answer: string
   sources: string[]
 }
+
+interface Listing {
+  id: string
+  commodity: string
+  quantity: string
+  location: string
+  wantedInReturn: string
+  sme_name?: string
+}
