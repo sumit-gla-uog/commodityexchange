@@ -10,10 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@salt-ds/core": "^1.18.0",
+    "@salt-ds/core": "^1.65.0",
     "@salt-ds/icons": "^1.18.0",
     "ag-grid-community": "^36.0.2",
     "ag-grid-react": "^36.0.2",
+    "compute-scroll-into-view": "^3.1.1",
     "highcharts": "^13.0.0",
     "highcharts-react-official": "^3.2.3",
     "react": "^19.2.7",

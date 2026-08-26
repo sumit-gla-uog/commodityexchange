@@ -1,0 +1,207 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.subtitle {
+  color: #9ca3af;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.summaryCard {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.summaryLabel {
+  color: #9ca3af;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.summaryValue {
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.summaryValueAmber {
+  color: #fbbf24;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.summaryValueGreen {
+  color: #4ade80;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.summaryFootnote {
+  color: #6b7280;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.gridCard {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.gridCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #374151;
+}
+
+.recordCount {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.gridWrap {
+  height: 400px;
+}
+
+.settlementCard {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.settlementHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.settlementTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pulseDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #4ade80;
+}
+
+.matchId {
+  color: #60a5fa;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.detailGrid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  border-top: 1px solid #374151;
+  padding-top: 16px;
+}
+
+.detailBox {
+  background-color: #111827;
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.detailLabel {
+  color: #9ca3af;
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.detailValue {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.detailSubtext {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.deltaPositive {
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.deltaNegative {
+  color: #f87171;
+  font-weight: 600;
+}
+
+.statusBadge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.statusSettled {
+  background-color: #14532d;
+  color: #4ade80;
+  border: 1px solid #15803d;
+}
+
+.statusPending {
+  background-color: #78350f;
+  color: #fbbf24;
+  border: 1px solid #b45309;
+}
+
+.statusCancelled {
+  background-color: #7f1d1d;
+  color: #f87171;
+  border: 1px solid #b91c1c;
+}
+
+.statusDefault {
+  background-color: #374151;
+  color: #d1d5db;
+}
+
+.viewButton {
+  padding: 4px 12px;
+  background-color: #1d4ed8;
+  color: #ffffff;
+  font-size: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.viewButton:hover {
+  background-color: #2563eb;
+}

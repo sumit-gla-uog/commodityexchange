@@ -1,28 +1,41 @@
 import { useState } from 'react'
-import { Text } from '@salt-ds/core'
-import { ListingForm } from '../../components/barter/ListingForm'
-import { ListingsTable } from '../../components/barter/ListingTable'
-import { MatchResult } from '../../components/barter/MatchResult'
+import { StackLayout, Tab, TabBar, TabList, Tabs, TabTrigger, Text } from '@salt-ds/core'
+
+type BarterTab = 'market' | 'my-listings' | 'orders'
 
 export const BarterPage = () => {
-  const [matchResult, setMatchResult] = useState<any>(null)
+  const [activeTab, setActiveTab] = useState<BarterTab>('market')
 
   return (
-    <div className="flex flex-col gap-6">
-      <Text styleAs="h2" className="text-white font-bold">
-        Barter Matching Engine
-      </Text>
-
-      <div className="grid grid-cols-2 gap-6">
-        {/* Left — Listing Form */}
-        <ListingForm />
-
-        {/* Right — Active Listings */}
-        <ListingsTable onMatch={setMatchResult} />
+    <StackLayout gap={3}>
+      <div>
+        <Text styleAs="h2" className="text-white font-bold">
+          Barter Matching Engine
+        </Text>
+        <Text className="text-gray-400">
+          List surplus · Match with UK SMEs · Settle at fair value
+        </Text>
       </div>
 
-      {/* Match Result */}
-      {matchResult && <MatchResult result={matchResult} />}
-    </div>
+      <Tabs value={activeTab} onChange={(value) => setActiveTab(value as any)}>
+        <TabBar>
+          <TabList>
+            <Tab value="market">
+              <TabTrigger>Market Listings</TabTrigger>
+            </Tab>
+            <Tab value="my-listings">
+              <TabTrigger>My Listings</TabTrigger>
+            </Tab>
+            <Tab value="orders">
+              <TabTrigger>Orders & History</TabTrigger>
+            </Tab>
+          </TabList>
+        </TabBar>
+      </Tabs>
+
+      {activeTab === 'market' && <Text className="text-gray-400">Market Listings — TODO</Text>}
+      {activeTab === 'my-listings' && <Text className="text-gray-400">My Listings — TODO</Text>}
+      {activeTab === 'orders' && <Text className="text-gray-400">Orders & History — TODO</Text>}
+    </StackLayout>
   )
 }
