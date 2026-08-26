@@ -3,6 +3,8 @@ import { Text } from '@salt-ds/core'
 import { useListings } from '../../hooks/useListing'
 import styles from './BarterPage.module.css'
 import { MarketListingsTab } from '../../components/barter/MarketListingsTab'
+import { CreateListingDialog } from '../../components/barter/CreateListingDialog'
+
 
 type BarterTab = 'market' | 'my-listings' | 'orders'
 
@@ -18,6 +20,7 @@ export const BarterPage = () => {
   const [activeTab, setActiveTab] = useState<BarterTab>('market')
   const [search, setSearch] = useState('')
   const { listings, isLoading, isError, refetch } = useListings()
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   const searchFilter = (l: typeof listings[number]) =>
     l.commodity_offered.toLowerCase().includes(search.toLowerCase()) ||
@@ -49,10 +52,10 @@ export const BarterPage = () => {
           className={styles.searchInput}
         />
         {activeTab === 'market' && (
-          <button className={styles.newListingButton}>
-            + New Listing
-          </button>
-        )}
+  <button className={styles.newListingButton} onClick={() => setDialogOpen(true)}>
+    + New Listing
+  </button>
+)}
       </div>
 
       {isLoading && <Text className={styles.tabContent}>Loading listings...</Text>}
@@ -67,6 +70,12 @@ export const BarterPage = () => {
         </Text>
       )}
       {activeTab === 'orders' && <Text className={styles.tabContent}>Orders & History — TODO</Text>}
+
+      <CreateListingDialog
+  open={dialogOpen}
+  onClose={() => setDialogOpen(false)}
+  onSuccess={refetch}
+/>
     </div>
   )
 }
