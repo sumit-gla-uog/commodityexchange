@@ -1,0 +1,117 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 16px 20px;
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.commodity {
+  font-weight: 700;
+}
+
+.detail {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.arrow {
+  color: #6b7280;
+}
+
+.wanted {
+  font-weight: 700;
+  color: #93c5fd;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.statusBadge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.statusActive {
+  background-color: #14532d;
+  color: #4ade80;
+}
+
+.statusMatched {
+  background-color: #1e3a8a;
+  color: #93c5fd;
+}
+
+.statusExpired {
+  background-color: #374151;
+  color: #9ca3af;
+}
+
+.deleteButton {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.deleteButton:hover {
+  color: #f87171;
+}
+
+.cardBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.posted {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.addNoteButton {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.addNoteButton:hover {
+  color: #d1d5db;
+}
+
+.empty {
+  color: #9ca3af;
+  padding: 24px;
+  text-align: center;
+}

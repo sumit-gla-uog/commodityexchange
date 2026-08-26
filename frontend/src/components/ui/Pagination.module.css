@@ -1,0 +1,36 @@
+.wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-top: 1px solid #374151;
+}
+
+.info {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+.pageButton {
+  background: none;
+  border: 1px solid #4b5563;
+  color: #d1d5db;
+  border-radius: 4px;
+  padding: 4px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.pageButton:hover:not(:disabled) {
+  background-color: #374151;
+}
+
+.pageButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

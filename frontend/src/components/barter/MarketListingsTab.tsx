@@ -1,5 +1,10 @@
+import { useState } from 'react'
+
 import type { BarterListing } from '../../types/commodity'
 import styles from './MarketListingsTab.module.css'
+import { Pagination } from '../ui/Pagination'
+
+const PAGE_SIZE = 2
 
 interface MarketListingsTabProps {
   listings: BarterListing[]
@@ -7,6 +12,9 @@ interface MarketListingsTabProps {
 }
 
 export const MarketListingsTab = ({ listings, onMatch }: MarketListingsTabProps) => {
+   const [page, setPage] = useState(1)
+   const paginatedListings = listings.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+
   if (listings.length === 0) {
     return <div className={styles.empty}>No listings yet.</div>
   }
@@ -29,7 +37,8 @@ export const MarketListingsTab = ({ listings, onMatch }: MarketListingsTabProps)
         <span></span>
       </div>
 
-      {listings.map((l) => (
+      {/* {listings.map((l) => ( */}
+      {paginatedListings.map((l) => (
         <div key={l.id} className={styles.row}>
           <span className={styles.company}>{l.sme_name}</span>
           <span className={styles.location}>{l.location_uk}</span>
@@ -43,6 +52,13 @@ export const MarketListingsTab = ({ listings, onMatch }: MarketListingsTabProps)
           </button>
         </div>
       ))}
+
+       <Pagination
+    currentPage={page}
+    totalItems={listings.length}
+    pageSize={PAGE_SIZE}
+    onPageChange={setPage}
+  />
     </div>
   )
 }
