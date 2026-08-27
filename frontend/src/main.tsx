@@ -11,12 +11,12 @@ import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community'
 ModuleRegistry.registerModules([AllCommunityModule])
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  // <StrictMode>
     <SaltProvider theme="light" density="medium" mode="light">
       {/* <div style={{ '--salt-size-unit': '4px' } as React.CSSProperties}> */}
         <App />
       {/* </div> */}
 
     </SaltProvider>
-  </StrictMode>,
+  // </StrictMode>,
 )

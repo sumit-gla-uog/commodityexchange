@@ -35,9 +35,15 @@ export interface Order {
   party_b_name: string
   party_b_commodity: string
   party_b_quantity: number
+  fair_value: number
   fair_value_delta: number
+  platform_fee: number
+  vat_treatment: string
+  escrow_status: string
   status: string
   created_at: string
+  updated_at: string
+  note: string | null
 }
 
 // Barter match result
@@ -79,4 +85,33 @@ interface Listing {
   location: string
   wantedInReturn: string
   sme_name?: string
+}
+
+export interface FairValue {
+  value_a: number
+  value_b: number
+  delta_usd: number
+  delta_pct: number
+  is_fair: boolean
+  recommendation: string
+}
+
+export interface MatchedListing {
+  id: string
+  sme_name: string
+  commodity_offered: string
+  quantity_offered_mt: number
+  commodity_wanted: string
+  quantity_wanted_mt: number
+  location_uk: string
+}
+
+export interface SourceListing {
+  id: string
+  sme_name: string
+  commodity_offered: string
+  quantity_offered_mt: number
+  commodity_wanted: string
+  quantity_wanted_mt: number
+  location_uk: string
 }

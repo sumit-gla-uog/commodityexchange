@@ -5,6 +5,7 @@ import styles from './BarterPage.module.css'
 import { MarketListingsTab } from '../../components/barter/MarketListingsTab'
 import { CreateListingDialog } from '../../components/barter/CreateListingDialog'
 import { MyListingsTab } from '../../components/barter/MyListingsTab'
+import { MatchResultPanel } from '../../components/barter/MatchResultPanel'
 
 
 type BarterTab = 'market' | 'my-listings' | 'orders'
@@ -22,6 +23,7 @@ export const BarterPage = () => {
   const [search, setSearch] = useState('')
   const { listings, isLoading, isError, refetch } = useListings()
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [matchedListingId, setMatchedListingId] = useState<string | null>(null)
 
   // const searchFilter = (l: typeof listings[number]) =>
   //   l.commodity_offered.toLowerCase().includes(search.toLowerCase()) ||
@@ -81,9 +83,27 @@ export const BarterPage = () => {
       {isLoading && <Text className={styles.tabContent}>Loading listings...</Text>}
       {isError && <Text className={styles.tabContent}>Failed to load listings.</Text>}
 
-      {!isLoading && !isError && activeTab === 'market' && (
+      {/* {!isLoading && !isError && activeTab === 'market' && (
         <MarketListingsTab listings={filteredMarket} onMatch={(id) => console.log('match', id)} />
-      )}
+      )} */}
+    {!isLoading && !isError && activeTab === 'market' && (
+  <>
+    {matchedListingId && (
+      <MatchResultPanel
+        listingId={matchedListingId}
+        onClose={() => setMatchedListingId(null)}
+        onSuccess={() => {
+          refetch()
+          setMatchedListingId(null)
+        }}
+      />
+    )}
+    <MarketListingsTab
+      listings={filteredMarket}
+      onMatch={(id) => setMatchedListingId(id)}
+    />
+  </>
+)} 
       {!isLoading && !isError && activeTab === 'my-listings' && (
         <MyListingsTab listings={filteredMine} />
       )}

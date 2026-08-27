@@ -135,55 +135,55 @@ export const OrdersPage = () => {
       </div>
 
       {selectedOrder && (
-        <div className={styles.settlementCard}>
-          <div className={styles.settlementHeader}>
-            <div className={styles.settlementTitleGroup}>
-              <span className={styles.pulseDot} />
-              <Text styleAs="h3" className="text-white font-bold">Settlement Summary</Text>
-              <span className={styles.matchId}>{selectedOrder.id}</span>
-            </div>
-            <StatusBadge value={selectedOrder.status} />
-          </div>
+  <div className={styles.settlementCard}>
+    <div className={styles.settlementHeader}>
+      <div className={styles.settlementTitleGroup}>
+        <span className={styles.pulseDot} />
+        <Text styleAs="h3" className="text-white font-bold">Settlement Summary</Text>
+        <span className={styles.matchId}>{selectedOrder.id}</span>
+      </div>
+      <StatusBadge value={selectedOrder.status} />
+    </div>
 
-          <div className={styles.detailGrid}>
-            <div className={styles.detailBox}>
-              <p className={styles.detailLabel}>Commodity A</p>
-              <p className={styles.detailValue}>{selectedOrder.party_a_commodity}</p>
-              <p className={styles.detailSubtext}>{selectedOrder.party_a_quantity} mt · {selectedOrder.party_a_name}</p>
-            </div>
-            <div className={styles.detailBox}>
-              <p className={styles.detailLabel}>Commodity B</p>
-              <p className={styles.detailValue}>{selectedOrder.party_b_commodity}</p>
-              <p className={styles.detailSubtext}>{selectedOrder.party_b_quantity} mt · {selectedOrder.party_b_name}</p>
-            </div>
-            <div className={styles.detailBox}>
-              <p className={styles.detailLabel}>Fair Value</p>
-              <p className={styles.detailValue}>${Math.abs(selectedOrder.fair_value_delta).toLocaleString()}</p>
-            </div>
-            <div className={styles.detailBox}>
-              <p className={styles.detailLabel}>Delta</p>
-              <p className={selectedOrder.fair_value_delta >= 0 ? styles.deltaPositive : styles.deltaNegative}>
-                {selectedOrder.fair_value_delta >= 0 ? '+' : ''}${selectedOrder.fair_value_delta.toLocaleString()}
-              </p>
-            </div>
-          </div>
+    <div className={styles.detailGrid}>
+      <div className={styles.detailBox}>
+        <p className={styles.detailLabel}>Commodity A</p>
+        <p className={styles.detailValue}>{selectedOrder.party_a_commodity}</p>
+        <p className={styles.detailSubtext}>{selectedOrder.party_a_quantity} mt · {selectedOrder.party_a_name}</p>
+      </div>
+      <div className={styles.detailBox}>
+        <p className={styles.detailLabel}>Commodity B</p>
+        <p className={styles.detailValue}>{selectedOrder.party_b_commodity}</p>
+        <p className={styles.detailSubtext}>{selectedOrder.party_b_quantity} mt · {selectedOrder.party_b_name}</p>
+      </div>
+      <div className={styles.detailBox}>
+        <p className={styles.detailLabel}>Fair Value</p>
+        <p className={styles.detailValue}>${selectedOrder.fair_value?.toLocaleString() ?? '—'}</p>
+      </div>
+      <div className={styles.detailBox}>
+        <p className={styles.detailLabel}>Delta</p>
+        <p className={selectedOrder.fair_value_delta >= 0 ? styles.deltaPositive : styles.deltaNegative}>
+          {selectedOrder.fair_value_delta >= 0 ? '+' : ''}${selectedOrder.fair_value_delta.toLocaleString()}
+        </p>
+      </div>
+    </div>
 
-          <div className={styles.detailGrid3}>
-            <div>
-              <p className={styles.detailLabel}>Escrow Settlement</p>
-              <p className={styles.detailValue}>${Math.abs(selectedOrder.fair_value_delta).toLocaleString()}</p>
-            </div>
-            <div>
-              <p className={styles.detailLabel}>Platform Fee</p>
-              <p className={styles.detailValue}>${(Math.abs(selectedOrder.fair_value_delta) * 0.003).toFixed(0)}</p>
-            </div>
-            <div>
-              <p className={styles.detailLabel}>VAT Treatment</p>
-              <p className={styles.detailValue}>Zero-rated</p>
-            </div>
-          </div>
-        </div>
-      )}
+    <div className={styles.detailGrid3}>
+      <div>
+        <p className={styles.detailLabel}>Escrow Settlement</p>
+        <p className={styles.detailValue}>${selectedOrder.fair_value?.toLocaleString() ?? '—'}</p>
+      </div>
+      <div>
+        <p className={styles.detailLabel}>Platform Fee</p>
+        <p className={styles.detailValue}>${selectedOrder.platform_fee?.toLocaleString() ?? '—'}</p>
+      </div>
+      <div>
+        <p className={styles.detailLabel}>VAT Treatment</p>
+        <p className={styles.detailValue}>{selectedOrder.vat_treatment ?? 'Zero-rated'}</p>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   )
 }
