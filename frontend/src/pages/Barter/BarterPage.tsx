@@ -37,7 +37,7 @@ export const BarterPage = () => {
       l.commodity_wanted.toLowerCase().includes(search.toLowerCase()) ||
       l.location_uk.toLowerCase().includes(search.toLowerCase()) ||
       l.sme_name.toLowerCase().includes(search.toLowerCase())
-    )
+     )
   }, [listings, search])
 
   const filteredMine = useMemo(() => {

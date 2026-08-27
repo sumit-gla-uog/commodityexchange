@@ -27,6 +27,18 @@ export interface BarterListing {
   status: 'active' | 'matched' | 'expired'
   created_at: string
 }
+export interface Order {
+  id: string
+  party_a_name: string
+  party_a_commodity: string
+  party_a_quantity: number
+  party_b_name: string
+  party_b_commodity: string
+  party_b_quantity: number
+  fair_value_delta: number
+  status: string
+  created_at: string
+}
 
 // Barter match result
 export interface MatchResult {

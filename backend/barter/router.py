@@ -31,9 +31,11 @@ def calculate_fair_value(listing_a: dict, listing_b: dict):
 
     value_a = listing_a["quantity_offered_mt"] * price_a
     value_b = listing_b["quantity_offered_mt"] * price_b
-    delta = abs(value_a - value_b)
+    # delta = abs(value_a - value_b)
+    delta = value_a - value_b
     higher = max(value_a, value_b)
-    delta_pct = (delta / higher) * 100
+    # delta_pct = (delta / higher) * 100
+    delta_pct = (abs(delta) / higher) * 100
 
     return {
         "value_a": round(value_a, 2),
@@ -42,7 +44,7 @@ def calculate_fair_value(listing_a: dict, listing_b: dict):
         "delta_pct": round(delta_pct, 2),
         "is_fair": delta_pct < 5,
         "recommendation": "Fair exchange" if delta_pct < 5
-        else f"Adjust quantity by approximately {round(delta / price_b, 2)} mt to balance the exchange"
+        else f"Adjust quantity by approximately {round(abs(delta) / price_b, 2)} mt to balance the exchange"
     }
 
 
@@ -110,12 +112,14 @@ def match_listing(listing_id: str):
         if listing["commodity_wanted"] != source["commodity_offered"]:
             continue
 
-        qty_diff = abs(listing["quantity_offered_mt"] - source["quantity_wanted_mt"])
-        qty_max = max(listing["quantity_offered_mt"], source["quantity_wanted_mt"])
-        if (qty_diff / qty_max) > 0.20:
-            continue
+        # qty_diff = abs(listing["quantity_offered_mt"] - source["quantity_wanted_mt"])
+        # qty_max = max(listing["quantity_offered_mt"], source["quantity_wanted_mt"])
+        # if (qty_diff / qty_max) > 0.20:
+        #     continue
 
         fair_value = calculate_fair_value(source, listing)
+        if fair_value is None:
+            continue
         matches.append({
             "matched_listing": listing,
             "fair_value": fair_value
@@ -125,21 +129,32 @@ def match_listing(listing_id: str):
         return {"message": "No matches found", "matches": []}
 
     # Create order in Supabase
-    if matches:
-        order_data = {
-            "party_a_name": source["sme_name"],
-            "party_a_commodity": source["commodity_offered"],
-            "party_a_quantity": source["quantity_offered_mt"],
-            "party_b_name": matches[0]["matched_listing"]["sme_name"],
-            "party_b_commodity": matches[0]["matched_listing"]["commodity_offered"],
-            "party_b_quantity": matches[0]["matched_listing"]["quantity_offered_mt"],
-            "fair_value_delta": matches[0]["fair_value"]["delta_usd"] if matches[0]["fair_value"] else 0,
-            "status": "pending"
-        }
-        supabase.table("orders").insert(order_data).execute()
+    # Commenting for now as order will be not be created during match
+    # if matches:
+    #     order_data = {
+    #         "party_a_name": source["sme_name"],
+    #         "party_a_commodity": source["commodity_offered"],
+    #         "party_a_quantity": source["quantity_offered_mt"],
+    #         "party_b_name": matches[0]["matched_listing"]["sme_name"],
+    #         "party_b_commodity": matches[0]["matched_listing"]["commodity_offered"],
+    #         "party_b_quantity": matches[0]["matched_listing"]["quantity_offered_mt"],
+    #         "fair_value_delta": matches[0]["fair_value"]["delta_usd"] if matches[0]["fair_value"] else 0,
+    #         "status": "pending"
+    #     }
+    #     supabase.table("orders").insert(order_data).execute()
 
     return {
         "source_listing": source,
         "matches": matches,
         "total_matches": len(matches)
     }
+
+
+# to update status of the listing once order has been created so that it doesn't show it to other users/sme
+@router.patch("/listings/{listing_id}")
+def update_listing_status(listing_id: str, update: dict):
+    supabase = get_supabase()
+    response = supabase.table("listings").update({"status": update["status"]}).eq("id", listing_id).execute()
+    if not response.data:
+        raise HTTPException(status_code=404, detail="Listing not found")
+    return response.data[0]

@@ -3,21 +3,22 @@ import { Text } from '@salt-ds/core'
 import { AgGridReact } from 'ag-grid-react'
 import { themeQuartz } from 'ag-grid-community'
 import type { ColDef } from 'ag-grid-community'
-import { BASE_URL } from '../../api/client'
+import { BASE_URL } from '../../api/client' 
 import styles from './OrdersPage.module.css'
+import type { Order } from '../../types/commodity'
 
-interface Order {
-  id: string
-  party_a_name: string
-  party_a_commodity: string
-  party_a_quantity: number
-  party_b_name: string
-  party_b_commodity: string
-  party_b_quantity: number
-  fair_value_delta: number
-  status: string
-  created_at: string
-}
+// interface Order {
+//   id: string
+//   party_a_name: string
+//   party_a_commodity: string
+//   party_a_quantity: number
+//   party_b_name: string
+//   party_b_commodity: string
+//   party_b_quantity: number
+//   fair_value_delta: number
+//   status: string
+//   created_at: string
+// }
 
 const darkTheme = themeQuartz.withParams({
   backgroundColor: '#1f2937',
