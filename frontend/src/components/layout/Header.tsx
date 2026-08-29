@@ -5,28 +5,45 @@ interface HeaderProps {
   title: string
 }
 
+const user = JSON.parse(localStorage.getItem('user') || '{}')
+
+const handleLogout = () => {
+  localStorage.removeItem('token')
+  localStorage.removeItem('user')
+  window.location.href = '/'
+}
+
 export const Header = ({ title }: HeaderProps) => {
   return (
-    <header className="h-16 bg-gray-900 border-b border-gray-700 flex items-center justify-between px-6">
-      {/* Page Title */}
-      <Text styleAs="h3" className="text-white font-semibold">
-        {title}
-      </Text>
+  <header className="app-header">
+    {/* Page Title */}
+  <Text styleAs="h3" className="text-white font-semibold">
+    {title}
+  </Text>
 
-      {/* Right side */}
-      <div className="flex items-center gap-4">
-        <button className="text-gray-400 hover:text-white transition-colors">
-          <NotificationIcon size={1} />
-        </button>
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-[#2E7D32] flex items-center justify-center">
-            <UserIcon size={1} className="text-white" />
-          </div>
-          <Text styleAs="label" className="text-gray-300">
-            Sumit Kumar
-          </Text>
-        </div>
-      </div>
-    </header>
+  {/* Right side */}
+  <div className="header-right">
+    <button className="icon-button">
+      <NotificationIcon size={1} />
+    </button>
+    <div className="header-right">
+      <span style={{ color: '#9ca3af', fontSize: '13px' }}>{user.sme_name}</span>
+      <button
+        onClick={handleLogout}
+        style={{
+          backgroundColor: 'transparent',
+          border: '1px solid #374151',
+          color: '#9ca3af',
+          borderRadius: '6px',
+          padding: '6px 12px',
+          cursor: 'pointer',
+          fontSize: '13px'
+        }}
+      >
+        Logout
+      </button>
+    </div>
+  </div>
+</header>
   )
 }

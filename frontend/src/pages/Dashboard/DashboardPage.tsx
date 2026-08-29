@@ -98,8 +98,8 @@ export const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Right — Chart Side Panel */}
-      {/* Right — Chart Side Panel — Fixed overlay */}
+      {/* Right- Chart Side Panel */}
+      {/* Right- Chart Side Panel, Fixed overlay */}
 {selected && (
   <div style={{
     position: 'fixed',
@@ -138,7 +138,7 @@ export const DashboardPage = () => {
                 padding: '4px'
               }}
             >
-              ✕
+              x
             </button>
           </div>
 

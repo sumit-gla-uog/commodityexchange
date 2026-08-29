@@ -1,1 +1,4 @@
-@import "tailwindcss";
+/* @import "tailwindcss" layer(tailwind);
+@import "@salt-ds/core/css/salt-core.css" layer(salt);
+
+@layer tailwind, salt; */

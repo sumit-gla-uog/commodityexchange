@@ -1,13 +1,12 @@
-// @ts-nocheck
 import { useState, useEffect, useMemo } from 'react'
 import { Card, StackLayout, Text, FlexLayout, FlexItem } from '@salt-ds/core'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { AgGridReact } from 'ag-grid-react'
 import { themeQuartz } from 'ag-grid-community'
-import type {ColDef} from 'ag-grid-community'
-import {BASE_URL} from '../../api/client'
-
+import type { ColDef } from 'ag-grid-community'
+import { BASE_URL } from '../../api/client'
+import styles from './EvaluationsPage.module.css'
 
 interface PerQuestion {
   question: string
@@ -63,45 +62,27 @@ const ScoreCard = ({ label, score, planned = false }: {
   const badgeBg = score >= 0.7 ? '#14532d' : score >= 0.5 ? '#78350f' : '#7f1d1d'
 
   return (
-    //     <div style={{ 
-    //   flex: 1,
-    //   backgroundColor: '#1f2937',
-    //   border: '1px solid #374151',
-    //   borderRadius: '8px',
-    //   padding: '16px 20px'
-    // }}>
-    <StackLayout gap={2} direction='column' style={{
-      flex: 1,
-      backgroundColor: '#1f2937',
-      border: '1px solid #374151',
-      borderRadius: '8px',
-      padding: '16px 20px'
-    }}>
-      <Text styleAs="label" style={{ color: '#9ca3af', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-        {label}
-      </Text>
+    <StackLayout gap={2} direction="column" className={styles.scoreCard}>
+      <Text styleAs="label" className={styles.scoreCardLabel}>{label}</Text>
       <FlexLayout gap={2} align="end" direction="row">
-        <FlexItem style={{ color, fontSize: '30px', fontWeight: 'bold' }}>{score.toFixed(2)}</FlexItem>
-        <FlexItem style={{ color: '#6b7280', fontSize: '13px', paddingBottom: '4px' }}>/ 1.0</FlexItem>
+        <FlexItem style={{ color }} className={styles.scoreValue}>{score.toFixed(2)}</FlexItem>
+        <FlexItem className={styles.scoreMax}>/ 1.0</FlexItem>
       </FlexLayout>
-      <div style={{ backgroundColor: '#374151', borderRadius: '999px', height: '4px' }}>
-        <div style={{ backgroundColor: barColor, borderRadius: '999px', height: '4px', width: `${score * 100}%` }} />
+      <div className={styles.progressTrack}>
+        <div className={styles.progressFill} style={{ backgroundColor: barColor, width: `${score * 100}%` }} />
       </div>
       <FlexLayout gap={1} align="center" direction="row">
-        <FlexItem style={{ backgroundColor: badgeBg, color, fontSize: '10px', padding: '2px 8px', borderRadius: '4px', fontWeight: '600' }}>
+        <FlexItem className={styles.scoreBadge} style={{ backgroundColor: badgeBg, color }}>
           {badge}
         </FlexItem>
-        {planned && (
-          <FlexItem style={{ color: '#6b7280', fontSize: '10px' }}>* RAGAS Python 3.11 required</FlexItem>
-        )}
+        {planned && <FlexItem className={styles.plannedNote}>* RAGAS Python 3.11 required</FlexItem>}
       </FlexLayout>
     </StackLayout>
-    // </div>
   )
 }
 
 export const EvaluationsPage = () => {
-  const [results, setResults] = useState<EvalResults | null>(null)
+   const [results, setResults] = useState<EvalResults | null>(null)
   const [guardrailLogs, setGuardrailLogs] = useState<GuardrailLog[]>([])
 
   useEffect(() => {
@@ -110,17 +91,9 @@ export const EvaluationsPage = () => {
       .then(data => setResults(data))
       .catch(() => setResults(null))
 
-        // Guardrail endpoint not implemented yet — using fallback
-  setGuardrailLogs(FALLBACK_GUARDRAIL_LOGS)
-
+    // Guardrail endpoint not implemented yet — using fallback
+    setGuardrailLogs(FALLBACK_GUARDRAIL_LOGS)
   }, [])
-
-  // useEffect(() => {
-  //   fetch('http://localhost:8000/api/guardrails/log')
-  //     .then(res => res.json())
-  //     .then(data => setGuardrailLogs(data.logs ?? FALLBACK_GUARDRAIL_LOGS))
-  //     .catch(() => setGuardrailLogs(FALLBACK_GUARDRAIL_LOGS))
-  // }, [])
 
   const columnDefs = useMemo((): ColDef<PerQuestion>[] => [
     {
@@ -212,7 +185,7 @@ export const EvaluationsPage = () => {
       dataLabels: {
         enabled: true,
         style: { color: '#ffffff', fontWeight: '600', fontSize: '11px' },
-        formatter: function (this:any) { return (this.y as number).toFixed(2) }
+        formatter: function (this: any) { return (this.y as number).toFixed(2) }
       }
     } as Highcharts.SeriesColumnOptions],
     legend: { enabled: false },
@@ -231,62 +204,55 @@ export const EvaluationsPage = () => {
 
   return (
     <StackLayout gap={2} style={{ gap: '16px' }}>
-
-      {/* Header */}
-      <StackLayout gap={2}>
+      <StackLayout gap={2} className={styles.pageHeader}>
         <Text styleAs="h2">RAG Evaluation Dashboard</Text>
-        <Text styleAs="label" style={{ color: '#9ca3af' }}>
+        <Text styleAs="label" className={styles.headerSubtitle}>
           LLM-as-Judge evaluation across {results.total_questions} commodity test cases
         </Text>
       </StackLayout>
 
-      {/* 4 Score Cards */}
-      <FlexLayout direction='row' style={{ gap: '16px' }}>
+      <FlexLayout direction="row" style={{ gap: '16px' }}>
         <ScoreCard label="Faithfulness" score={results.faithfulness} />
         <ScoreCard label="Answer Relevancy" score={results.answer_relevancy} />
         <ScoreCard label="Context Precision" score={0.71} planned />
         <ScoreCard label="Context Recall" score={0.68} planned />
       </FlexLayout>
 
-      <FlexLayout direction='row' style={{ gap: '16px' }}>
-
-        {/* Metric Scores Overview */}
+      <FlexLayout direction="row" style={{ gap: '16px' }}>
         <FlexItem >
-          <Card style={{ backgroundColor: '#1f2937', border: '1px solid #374151' }}>
-           
+          <Card className={styles.card}>
             <HighchartsReact.default
               key={`chart-${results.faithfulness}`}
               highcharts={Highcharts}
               options={chartOptions}
             />
-            <Text styleAs="label" style={{ color: '#6b7280', fontSize: '10px' }}>
+            <Text styleAs="label" className={styles.chartFootnote}>
               * Context Precision and Context Recall are planned metrics requiring RAGAS on Python 3.11
             </Text>
           </Card>
         </FlexItem>
 
-        {/* Guardrail Activity */}
         <FlexItem>
-          <Card style={{ backgroundColor: '#1f2937', border: '1px solid #374151', width: '360px' }}>
+          <Card className={styles.guardrailCard}>
             <StackLayout gap={1}>
               <FlexLayout gap={1} align="center">
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22c55e', display: 'inline-block' }} />
+                <span className={styles.statusDot} />
                 <Text styleAs="h3">Guardrail Activity</Text>
               </FlexLayout>
               <StackLayout gap={1}>
                 {guardrailLogs.map((log, i) => {
                   const s = statusColors[log.status] ?? statusColors['PASSED']
                   return (
-                    <div key={i} style={{ backgroundColor: s.bg, borderRadius: '6px', padding: '10px 12px' }}>
-                      <FlexLayout justify="space-between" style={{ marginBottom: '4px' }}>
+                    <div key={i} className={styles.logEntry} style={{ backgroundColor: s.bg }}>
+                      <FlexLayout justify="space-between" className={styles.logHeader}>
                         <FlexLayout gap={1} align="center">
-                          <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: s.dot, display: 'inline-block' }} />
-                          <span style={{ color: s.text, fontSize: '11px', fontWeight: '700' }}>{log.status}</span>
+                          <span className={styles.logDot} style={{ backgroundColor: s.dot }} />
+                          <span className={styles.logStatus} style={{ color: s.text }}>{log.status}</span>
                         </FlexLayout>
-                        <span style={{ color: '#6b7280', fontSize: '10px' }}>{log.timestamp}</span>
+                        <span className={styles.logTimestamp}>{log.timestamp}</span>
                       </FlexLayout>
-                      <p style={{ color: '#e5e7eb', fontSize: '12px', margin: '0 0 2px 0' }}>{log.query}</p>
-                      <p style={{ color: '#9ca3af', fontSize: '11px', margin: 0 }}>{log.reason}</p>
+                      <p className={styles.logQuery}>{log.query}</p>
+                      <p className={styles.logReason}>{log.reason}</p>
                     </div>
                   )
                 })}
@@ -294,16 +260,14 @@ export const EvaluationsPage = () => {
             </StackLayout>
           </Card>
         </FlexItem>
-
       </FlexLayout>
 
-      {/* Per Query Breakdown */}
-      <Card style={{ backgroundColor: '#1f2937', border: '1px solid #374151', padding: 0, overflow: 'hidden' }}>
-        <div style={{ padding: '16px 24px', borderBottom: '1px solid #374151' }}>
+      <Card className={styles.tableCard}>
+        <div className={styles.tableHeader}>
           <Text styleAs="h3">Per Query Breakdown</Text>
-          <Text styleAs="label" style={{ color: '#9ca3af' }}>Individual scores per evaluated query</Text>
+          <Text styleAs="label" className={styles.tableHeaderSubtitle}>Individual scores per evaluated query</Text>
         </div>
-        <div style={{ height: '420px' }}>
+        <div className={styles.gridWrap}>
           <AgGridReact
             rowData={results.per_question}
             columnDefs={columnDefs}
@@ -313,8 +277,6 @@ export const EvaluationsPage = () => {
           />
         </div>
       </Card>
-
     </StackLayout>
   )
-
 }

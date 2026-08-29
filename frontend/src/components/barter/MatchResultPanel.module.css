@@ -1,0 +1,200 @@
+.panel {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.statusText {
+  color: #9ca3af;
+}
+
+.centerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  display: inline-block;
+}
+
+.headerTitle {
+  color: #4ade80;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #374151;
+  margin-bottom: 16px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  color: #6b7280;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.value {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.valueGreen {
+  color: #4ade80;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.subvalue {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.actionsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footnote {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.initiateButton {
+  background-color: #22c55e !important;
+  color: #000000 !important;
+  border: none !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+}
+
+.initiateButton:hover {
+  background-color: #16a34a !important;
+}
+
+.confirmBox {
+  background-color: #111827;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-top: 4px;
+}
+
+.confirmTitle {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.confirmSubtitle {
+  color: #9ca3af;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.settlementLine {
+  color: #93c5fd;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.confirmFieldsRow {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.confirmFieldsRow .fieldGroup {
+  flex: 1;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  padding: 10px 14px;
+}
+
+.confirmActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.confirmButton {
+  background-color: #22c55e !important;
+  color: #000000 !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+
+.confirmButton:hover {
+  background-color: #16a34a !important;
+}
+
+.successBox {
+  background-color: #052e16;
+  border: 1px solid #15803d;
+  border-radius: 8px;
+  padding: 16px 24px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.successRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.successIcon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.successTitle {
+  color: #4ade80;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.successDetail {
+  color: #9ca3af;
+  font-size: 12px;
+}

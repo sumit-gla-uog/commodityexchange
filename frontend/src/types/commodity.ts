@@ -27,6 +27,24 @@ export interface BarterListing {
   status: 'active' | 'matched' | 'expired'
   created_at: string
 }
+export interface Order {
+  id: string
+  party_a_name: string
+  party_a_commodity: string
+  party_a_quantity: number
+  party_b_name: string
+  party_b_commodity: string
+  party_b_quantity: number
+  fair_value: number
+  fair_value_delta: number
+  platform_fee: number
+  vat_treatment: string
+  escrow_status: string
+  status: string
+  created_at: string
+  updated_at: string
+  note: string | null
+}
 
 // Barter match result
 export interface MatchResult {
@@ -58,4 +76,42 @@ export interface ChatResponse {
   query: string
   answer: string
   sources: string[]
+}
+
+interface Listing {
+  id: string
+  commodity: string
+  quantity: string
+  location: string
+  wantedInReturn: string
+  sme_name?: string
+}
+
+export interface FairValue {
+  value_a: number
+  value_b: number
+  delta_usd: number
+  delta_pct: number
+  is_fair: boolean
+  recommendation: string
+}
+
+export interface MatchedListing {
+  id: string
+  sme_name: string
+  commodity_offered: string
+  quantity_offered_mt: number
+  commodity_wanted: string
+  quantity_wanted_mt: number
+  location_uk: string
+}
+
+export interface SourceListing {
+  id: string
+  sme_name: string
+  commodity_offered: string
+  quantity_offered_mt: number
+  commodity_wanted: string
+  quantity_wanted_mt: number
+  location_uk: string
 }
