@@ -60,7 +60,10 @@ class ListingRequest(BaseModel):
 @router.get("/listings")
 def get_listings(status: str = "active"):
     supabase = get_supabase()
-    response = supabase.table("listings").select("*").eq("status", status).execute()
+    query = supabase.table("listings").select("*")
+    if status != "all":
+        query = query.eq("status", status)
+    response = query.execute()
     return {"listings": response.data}
 
 @router.get("/debug/prices")

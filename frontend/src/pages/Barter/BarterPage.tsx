@@ -38,7 +38,9 @@ export const BarterPage = () => {
   // const filteredMine = listings.filter((l) => l.sme_name === currentUser.sme_name).filter(searchFilter)
 
   const filteredMarket = useMemo(() => {
-    return listings.filter((l) =>
+    return listings
+    .filter((l) => l.status === 'active')
+    .filter((l) =>
       l.commodity_offered.toLowerCase().includes(search.toLowerCase()) ||
       l.commodity_wanted.toLowerCase().includes(search.toLowerCase()) ||
       l.location_uk.toLowerCase().includes(search.toLowerCase()) ||
@@ -52,7 +54,8 @@ export const BarterPage = () => {
       .filter((l) =>
         l.commodity_offered.toLowerCase().includes(search.toLowerCase()) ||
         l.commodity_wanted.toLowerCase().includes(search.toLowerCase()) ||
-        l.location_uk.toLowerCase().includes(search.toLowerCase())
+        l.location_uk.toLowerCase().includes(search.toLowerCase()) ||
+        l.status.toLowerCase().includes(search.toLowerCase())
       )
   }, [listings, search])
 

@@ -11,7 +11,8 @@ export const useListings = () => {
     setIsLoading(true)
     setIsError(false)
 
-    fetch(`${BASE_URL}/api/barter/listings`)
+    // fetch(`${BASE_URL}/api/barter/listings`)
+    fetch(`${BASE_URL}/api/barter/listings?status=all`)
       .then((res) => res.json())
       .then((data) => setListings(data.listings ?? data))
       .catch(() => setIsError(true))
