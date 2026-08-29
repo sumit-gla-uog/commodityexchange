@@ -63,6 +63,11 @@ def get_listings(status: str = "active"):
     response = supabase.table("listings").select("*").eq("status", status).execute()
     return {"listings": response.data}
 
+@router.get("/debug/prices")
+def debug_prices():
+    commodities = ["Copper", "Aluminum", "Wheat, US HRW", "Maize", "Palm oil", "Soybeans", "Zinc", "Nickel", "Iron ore, cfr spot", "Coal, Australian"]
+    return {c: get_latest_price(c) for c in commodities}
+
 
 @router.post("/listings")
 def create_listing(request: ListingRequest):
@@ -106,6 +111,8 @@ def match_listing(listing_id: str):
     matches = []
     for listing in listings:
         if listing["id"] == source["id"]:
+            continue
+        if listing["sme_name"] == source["sme_name"]:
             continue
         if listing["commodity_offered"] != source["commodity_wanted"]:
             continue

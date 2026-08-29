@@ -1,0 +1,208 @@
+.card {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.matchId {
+  color: #93c5fd;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.statusBadge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.statusPending {
+  background-color: #1e3a8a;
+  color: #93c5fd;
+}
+
+.statusSettled {
+  background-color: #14532d;
+  color: #4ade80;
+}
+
+.statusCancelled {
+  background-color: #7f1d1d;
+  color: #f87171;
+}
+
+.updatedDate {
+  color: #6b7280;
+  font-size: 12px;
+  margin-left: auto;
+}
+
+.partyName {
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.offerRow {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.offerBox {
+  flex: 1;
+  background-color: #111827;
+  border-radius: 6px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.numbersRow {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.numberBox {
+  flex: 1;
+  background-color: #111827;
+  border-radius: 6px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  color: #6b7280;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.value {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.deltaPositive {
+  color: #4ade80;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.deltaNegative {
+  color: #f87171;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.settlementLine {
+  color: #93c5fd;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.noteRow {
+  background-color: #111827;
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin-top: 8px;
+}
+
+.noteText {
+  color: #d1d5db;
+  font-size: 13px;
+}
+
+.noteEditRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.noteInput {
+  flex: 1;
+  background-color: #111827;
+  border: 1px solid #4b5563;
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.noteInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.noteSaveButton {
+  background-color: #22c55e;
+  color: #000000;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.noteCancelButton {
+  background: none;
+  border: 1px solid #4b5563;
+  color: #d1d5db;
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.noteRow {
+  background-color: #111827;
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin-top: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.noteRow:hover {
+  background-color: #1a2332;
+}
+
+.editIcon {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.addNoteButton {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 12px;
+  cursor: pointer;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.addNoteButton:hover {
+  color: #d1d5db;
+}

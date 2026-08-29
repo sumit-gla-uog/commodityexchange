@@ -8,13 +8,11 @@ export const useOrderHistory = () => {
   const [isError, setIsError] = useState(false)
   const [hasFetched, setHasFetched] = useState(false)
 
-  const fetchOrders = useCallback(() => {
-    if (hasFetched) return
-
+  const loadOrders = useCallback(() => {
     setIsLoading(true)
     setIsError(false)
 
-    fetch(`${BASE_URL}/api/orders/`)
+    return fetch(`${BASE_URL}/api/orders/`)
       .then((res) => res.json())
       .then((data) => setOrders(data.orders ?? data))
       .catch(() => setIsError(true))
@@ -22,7 +20,16 @@ export const useOrderHistory = () => {
         setIsLoading(false)
         setHasFetched(true)
       })
-  }, [hasFetched])
+  }, [])
 
-  return { orders, isLoading, isError, fetchOrders }
+  const fetchOrders = useCallback(() => {
+    if (hasFetched) return
+    loadOrders()
+  }, [hasFetched, loadOrders])
+
+  const refetch = useCallback(() => {
+    loadOrders()
+  }, [loadOrders])
+
+  return { orders, isLoading, isError, fetchOrders, refetch }
 }

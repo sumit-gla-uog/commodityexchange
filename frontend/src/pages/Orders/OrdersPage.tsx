@@ -1,24 +1,12 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Text } from '@salt-ds/core'
 import { AgGridReact } from 'ag-grid-react'
 import { themeQuartz } from 'ag-grid-community'
 import type { ColDef } from 'ag-grid-community'
-import { BASE_URL } from '../../api/client' 
+import { BASE_URL } from '../../api/client'
 import styles from './OrdersPage.module.css'
 import type { Order } from '../../types/commodity'
-
-// interface Order {
-//   id: string
-//   party_a_name: string
-//   party_a_commodity: string
-//   party_a_quantity: number
-//   party_b_name: string
-//   party_b_commodity: string
-//   party_b_quantity: number
-//   fair_value_delta: number
-//   status: string
-//   created_at: string
-// }
+import { OrderCard } from '../../components/orders/OrderCard'
 
 const darkTheme = themeQuartz.withParams({
   backgroundColor: '#1f2937',
@@ -45,11 +33,19 @@ export const OrdersPage = () => {
   const [orders, setOrders] = useState<Order[]>([])
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
 
-  useEffect(() => {
+  const fetchOrders = useCallback(() => {
     fetch(`${BASE_URL}/api/orders/`)
       .then(res => res.json())
       .then(data => setOrders(data.orders))
   }, [])
+
+  useEffect(() => {
+    fetchOrders()
+  }, [fetchOrders])
+
+  const handleOrderUpdated = () => {
+    fetchOrders()
+  }
 
   const totalMatches = orders.length
   const pendingCount = orders.filter(o => o.status === 'pending').length
@@ -134,56 +130,7 @@ export const OrdersPage = () => {
         </div>
       </div>
 
-      {selectedOrder && (
-  <div className={styles.settlementCard}>
-    <div className={styles.settlementHeader}>
-      <div className={styles.settlementTitleGroup}>
-        <span className={styles.pulseDot} />
-        <Text styleAs="h3" className="text-white font-bold">Settlement Summary</Text>
-        <span className={styles.matchId}>{selectedOrder.id}</span>
-      </div>
-      <StatusBadge value={selectedOrder.status} />
-    </div>
-
-    <div className={styles.detailGrid}>
-      <div className={styles.detailBox}>
-        <p className={styles.detailLabel}>Commodity A</p>
-        <p className={styles.detailValue}>{selectedOrder.party_a_commodity}</p>
-        <p className={styles.detailSubtext}>{selectedOrder.party_a_quantity} mt · {selectedOrder.party_a_name}</p>
-      </div>
-      <div className={styles.detailBox}>
-        <p className={styles.detailLabel}>Commodity B</p>
-        <p className={styles.detailValue}>{selectedOrder.party_b_commodity}</p>
-        <p className={styles.detailSubtext}>{selectedOrder.party_b_quantity} mt · {selectedOrder.party_b_name}</p>
-      </div>
-      <div className={styles.detailBox}>
-        <p className={styles.detailLabel}>Fair Value</p>
-        <p className={styles.detailValue}>${selectedOrder.fair_value?.toLocaleString() ?? '—'}</p>
-      </div>
-      <div className={styles.detailBox}>
-        <p className={styles.detailLabel}>Delta</p>
-        <p className={selectedOrder.fair_value_delta >= 0 ? styles.deltaPositive : styles.deltaNegative}>
-          {selectedOrder.fair_value_delta >= 0 ? '+' : ''}${selectedOrder.fair_value_delta.toLocaleString()}
-        </p>
-      </div>
-    </div>
-
-    <div className={styles.detailGrid3}>
-      <div>
-        <p className={styles.detailLabel}>Escrow Settlement</p>
-        <p className={styles.detailValue}>${selectedOrder.fair_value?.toLocaleString() ?? '—'}</p>
-      </div>
-      <div>
-        <p className={styles.detailLabel}>Platform Fee</p>
-        <p className={styles.detailValue}>${selectedOrder.platform_fee?.toLocaleString() ?? '—'}</p>
-      </div>
-      <div>
-        <p className={styles.detailLabel}>VAT Treatment</p>
-        <p className={styles.detailValue}>{selectedOrder.vat_treatment ?? 'Zero-rated'}</p>
-      </div>
-    </div>
-  </div>
-)}
+      {selectedOrder && <OrderCard order={selectedOrder} onNoteUpdated={handleOrderUpdated} />}
     </div>
   )
 }

@@ -6,6 +6,8 @@ import { MarketListingsTab } from '../../components/barter/MarketListingsTab'
 import { CreateListingDialog } from '../../components/barter/CreateListingDialog'
 import { MyListingsTab } from '../../components/barter/MyListingsTab'
 import { MatchResultPanel } from '../../components/barter/MatchResultPanel'
+import { useOrderHistory } from '../../hooks/useOrderHistory'
+import { OrdersHistoryTab } from '../../components/orders/OrdersHistoryTab'
 
 
 type BarterTab = 'market' | 'my-listings' | 'orders'
@@ -19,11 +21,13 @@ const TABS: { id: BarterTab; label: string }[] = [
 const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
 
 export const BarterPage = () => {
+  const { orders, isLoading: ordersLoading, isError: ordersError, fetchOrders, refetch: refetchOrders } = useOrderHistory()
   const [activeTab, setActiveTab] = useState<BarterTab>('market')
   const [search, setSearch] = useState('')
   const { listings, isLoading, isError, refetch } = useListings()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [matchedListingId, setMatchedListingId] = useState<string | null>(null)
+  
 
   // const searchFilter = (l: typeof listings[number]) =>
   //   l.commodity_offered.toLowerCase().includes(search.toLowerCase()) ||
@@ -52,13 +56,18 @@ export const BarterPage = () => {
       )
   }, [listings, search])
 
+  const handleTabClick = (tabId: BarterTab) => {
+  setActiveTab(tabId)
+  if (tabId === 'orders') fetchOrders()
+}
+
   return (
     <div className={styles.page}>
       <div className={styles.tabBar}>
         {TABS.map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => handleTabClick(tab.id)}
             className={`${styles.tabButton} ${activeTab === tab.id ? styles.tabButtonActive : ''}`}
           >
             {tab.label}
@@ -107,7 +116,15 @@ export const BarterPage = () => {
       {!isLoading && !isError && activeTab === 'my-listings' && (
         <MyListingsTab listings={filteredMine} />
       )}
-      {activeTab === 'orders' && <Text className={styles.tabContent}>Orders & History — TODO</Text>}
+      {activeTab === 'orders' && (
+  <>
+    {ordersLoading && <Text className={styles.tabContent}>Loading orders...</Text>}
+    {ordersError && <Text className={styles.tabContent}>Failed to load orders.</Text>}
+    {!ordersLoading && !ordersError && (
+      <OrdersHistoryTab orders={orders} search={search} onOrderUpdated={refetchOrders}/>
+    )}
+  </>
+)}
 
       <CreateListingDialog
         open={dialogOpen}
