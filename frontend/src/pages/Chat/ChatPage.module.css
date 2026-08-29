@@ -1,0 +1,100 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 85vh;
+}
+
+.heading {
+  margin-bottom: 16px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-right: 8px;
+}
+
+.row {
+  display: flex;
+}
+
+.rowUser {
+  justify-content: flex-end;
+}
+
+.rowAssistant {
+  justify-content: flex-start;
+}
+
+.bubble {
+  max-width: 42rem;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.bubbleUser {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.bubbleAssistant {
+  background-color: #1f2937;
+  color: #e5e7eb;
+  border: 1px solid #374151;
+}
+
+.loadingBubble {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.inputRow {
+  display: flex;
+  gap: 12px;
+}
+
+.textInput {
+  flex: 1;
+  background-color: #1f2937;
+  border: 1px solid #4b5563;
+  border-radius: 4px;
+  padding: 12px 16px;
+  color: #ffffff;
+}
+
+.textInput::placeholder {
+  color: #6b7280;
+}
+
+.textInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+.sendButton {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 12px 24px !important;
+  font-size: 14px !important;
+  border-radius: 4px !important;
+  white-space: nowrap;
+}
+
+.sendButton:hover {
+  background-color: #3b82f6 !important;
+}
+
+.sendButton:disabled {
+  background-color: #374151 !important;
+  color: #9ca3af !important;
+  cursor: not-allowed;
+}

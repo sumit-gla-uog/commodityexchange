@@ -15,35 +15,35 @@ const handleLogout = () => {
 
 export const Header = ({ title }: HeaderProps) => {
   return (
-    <header className="h-16 bg-gray-900 border-b border-gray-700 flex items-center justify-between px-6">
-      {/* Page Title */}
-      <Text styleAs="h3" className="text-white font-semibold">
-        {title}
-      </Text>
+  <header className="app-header">
+    {/* Page Title */}
+  <Text styleAs="h3" className="text-white font-semibold">
+    {title}
+  </Text>
 
-      {/* Right side */}
-      <div className="flex items-center gap-4">
-        <button className="text-gray-400 hover:text-white transition-colors">
-          <NotificationIcon size={1} />
-        </button>
-        <div className="flex items-center gap-4">
-          <span style={{ color: '#9ca3af', fontSize: '13px' }}>{user.sme_name}</span>
-          <button
-            onClick={handleLogout}
-            style={{
-              backgroundColor: 'transparent',
-              border: '1px solid #374151',
-              color: '#9ca3af',
-              borderRadius: '6px',
-              padding: '6px 12px',
-              cursor: 'pointer',
-              fontSize: '13px'
-            }}
-          >
-            Logout
-          </button>
-        </div>
-      </div>
-    </header>
+  {/* Right side */}
+  <div className="header-right">
+    <button className="icon-button">
+      <NotificationIcon size={1} />
+    </button>
+    <div className="header-right">
+      <span style={{ color: '#9ca3af', fontSize: '13px' }}>{user.sme_name}</span>
+      <button
+        onClick={handleLogout}
+        style={{
+          backgroundColor: 'transparent',
+          border: '1px solid #374151',
+          color: '#9ca3af',
+          borderRadius: '6px',
+          padding: '6px 12px',
+          cursor: 'pointer',
+          fontSize: '13px'
+        }}
+      >
+        Logout
+      </button>
+    </div>
+  </div>
+</header>
   )
 }

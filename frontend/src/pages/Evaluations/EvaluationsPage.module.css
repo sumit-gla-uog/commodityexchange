@@ -1,0 +1,138 @@
+.pageHeader {
+  gap: 4px;
+}
+
+.headerSubtitle {
+  color: #9ca3af;
+}
+
+.scoreCard {
+  flex: 1;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 16px 20px;
+}
+
+.scoreCardLabel {
+  color: #9ca3af;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.scoreValue {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.scoreMax {
+  color: #6b7280;
+  font-size: 13px;
+  padding-bottom: 4px;
+}
+
+.progressTrack {
+  background-color: #374151;
+  border-radius: 999px;
+  height: 4px;
+}
+
+.progressFill {
+  border-radius: 999px;
+  height: 4px;
+}
+
+.scoreBadge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.plannedNote {
+  color: #6b7280;
+  font-size: 10px;
+}
+
+.card {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+}
+
+.guardrailCard {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  width: 360px;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  display: inline-block;
+}
+
+.logEntry {
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.logHeader {
+  margin-bottom: 4px;
+}
+
+.logDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.logStatus {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.logTimestamp {
+  color: #6b7280;
+  font-size: 10px;
+}
+
+.logQuery {
+  color: #e5e7eb;
+  font-size: 12px;
+  margin: 0 0 2px 0;
+}
+
+.logReason {
+  color: #9ca3af;
+  font-size: 11px;
+  margin: 0;
+}
+
+.chartFootnote {
+  color: #6b7280;
+  font-size: 10px;
+}
+
+.tableCard {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  padding: 0;
+  overflow: hidden;
+}
+
+.tableHeader {
+  padding: 16px 24px;
+  border-bottom: 1px solid #374151;
+}
+
+.tableHeaderSubtitle {
+  color: #9ca3af;
+}
+
+.gridWrap {
+  height: 420px;
+}
