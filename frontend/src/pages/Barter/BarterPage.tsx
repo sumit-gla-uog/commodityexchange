@@ -114,7 +114,7 @@ export const BarterPage = () => {
   </>
 )} 
       {!isLoading && !isError && activeTab === 'my-listings' && (
-        <MyListingsTab listings={filteredMine} />
+        <MyListingsTab listings={filteredMine} onDeleted={refetch}/>
       )}
       {activeTab === 'orders' && (
   <>

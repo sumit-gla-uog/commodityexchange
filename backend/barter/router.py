@@ -165,3 +165,14 @@ def update_listing_status(listing_id: str, update: dict):
     if not response.data:
         raise HTTPException(status_code=404, detail="Listing not found")
     return response.data[0]
+
+@router.delete("/listings/{listing_id}")
+def delete_listing(listing_id: str):
+    supabase = get_supabase()
+    listing_res = supabase.table("listings").select("status").eq("id", listing_id).execute()
+    if not listing_res.data:
+        raise HTTPException(status_code=404, detail="Listing not found")
+    if listing_res.data[0]["status"] != "active":
+        raise HTTPException(status_code=400, detail="Only active listings can be deleted")
+    response = supabase.table("listings").delete().eq("id", listing_id).execute()
+    return {"message": "Listing deleted"}
