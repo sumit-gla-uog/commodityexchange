@@ -8,6 +8,9 @@ python-dotenv==1.2.2
 # HTTP Requests
 requests==2.32.5
 
+# Database
+supabase==2.31.0
+
 # Vector Store
 chromadb==1.5.9
 
