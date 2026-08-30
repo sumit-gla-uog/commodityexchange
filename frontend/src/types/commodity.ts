@@ -26,6 +26,7 @@ export interface BarterListing {
   location_uk: string
   status: 'active' | 'matched' | 'expired'
   created_at: string
+  user_id: string | null
 }
 export interface Order {
   id: string
@@ -104,6 +105,9 @@ export interface MatchedListing {
   commodity_wanted: string
   quantity_wanted_mt: number
   location_uk: string
+  status: string
+  user_id: string  
+  created_at: string
 }
 
 export interface SourceListing {

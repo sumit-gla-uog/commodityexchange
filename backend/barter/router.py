@@ -55,6 +55,7 @@ class ListingRequest(BaseModel):
     commodity_wanted: str
     quantity_wanted_mt: float
     location_uk: str
+    user_id: str = None 
 
 
 @router.get("/listings")
@@ -82,7 +83,8 @@ def create_listing(request: ListingRequest):
         "commodity_wanted": request.commodity_wanted,
         "quantity_wanted_mt": request.quantity_wanted_mt,
         "location_uk": request.location_uk,
-        "status": "active"
+        "status": "active",
+        "user_id": request.user_id
     }
     response = supabase.table("listings").insert(data).execute()
     return {"message": "Listing created", "data": response.data[0]}

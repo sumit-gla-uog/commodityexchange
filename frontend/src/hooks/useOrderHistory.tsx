@@ -11,8 +11,10 @@ export const useOrderHistory = () => {
   const loadOrders = useCallback(() => {
     setIsLoading(true)
     setIsError(false)
+    const user = JSON.parse(localStorage.getItem('user') || '{}')
 
-    return fetch(`${BASE_URL}/api/orders/`)
+    // return fetch(`${BASE_URL}/api/orders/`)
+    return fetch(`${BASE_URL}/api/orders/?user_id=${user.id}`)
       .then((res) => res.json())
       .then((data) => setOrders(data.orders ?? data))
       .catch(() => setIsError(true))

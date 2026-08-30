@@ -7,6 +7,8 @@ import { BASE_URL } from '../../api/client'
 import styles from './OrdersPage.module.css'
 import type { Order } from '../../types/commodity'
 import { OrderCard } from '../../components/orders/OrderCard'
+import { useOrders } from '../../hooks/useOrders'
+
 
 const darkTheme = themeQuartz.withParams({
   backgroundColor: '#1f2937',
@@ -30,22 +32,24 @@ const StatusBadge = ({ value }: { value: string }) => (
 )
 
 export const OrdersPage = () => {
-  const [orders, setOrders] = useState<Order[]>([])
+  // const [orders, setOrders] = useState<Order[]>([])
+  const { orders, isLoading, refetch } = useOrders()
+
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
 
-  const fetchOrders = useCallback(() => {
-    fetch(`${BASE_URL}/api/orders/`)
-      .then(res => res.json())
-      .then(data => setOrders(data.orders))
-  }, [])
+  // const fetchOrders = useCallback(() => {
+  //   fetch(`${BASE_URL}/api/orders/`)
+  //     .then(res => res.json())
+  //     .then(data => setOrders(data.orders))
+  // }, [])
 
-  useEffect(() => {
-    fetchOrders()
-  }, [fetchOrders])
+  // useEffect(() => {
+  //   fetchOrders()
+  // }, [fetchOrders])
 
   const handleOrderUpdated = () => {
-    fetchOrders()
-  }
+  refetch()
+}
 
   const totalMatches = orders.length
   const pendingCount = orders.filter(o => o.status === 'pending').length
