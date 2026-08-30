@@ -8,17 +8,34 @@ load_dotenv()
 
 import re
 
-def parse_json_response(text: str) -> dict:
-    # Removed <think>...</think> blocks
-    text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL).strip()
-    # Extract JSON object
-    match = re.search(r'\{.*\}', text, re.DOTALL)
-    if match:
-        return json.loads(match.group())
-    return json.loads(text)
+# def parse_json_response(text: str) -> dict:
+#     # Removed <think>...</think> blocks
+#     text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL).strip()
+#     # Extract JSON object
+#     match = re.search(r'\{.*\}', text, re.DOTALL)
+#     if match:
+#         return json.loads(match.group())
+#     return json.loads(text)
 
 def get_groq_client():
     return Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+def parse_json_response(text: str) -> dict:
+    # Remove any XML-like wrapper tags (e.g. <think>, <text>, <reasoning>, etc.)
+    text = re.sub(r'<[a-zA-Z_]+>.*?</[a-zA-Z_]+>', '', text, flags=re.DOTALL).strip()
+    text = re.sub(r'<[^>]+>', '', text).strip()
+
+    # Find the first '{' and let JSONDecoder parse just the first valid object,
+    # ignoring any trailing/extra data after it
+    start = text.find('{')
+    if start == -1:
+        raise ValueError(f"No JSON object found in response: {text!r}")
+
+    decoder = json.JSONDecoder()
+    obj, _ = decoder.raw_decode(text, start)
+    return obj
+
+
 
 
 def topic_guard(query: str) -> dict:
