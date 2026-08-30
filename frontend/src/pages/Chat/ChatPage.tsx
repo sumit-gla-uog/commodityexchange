@@ -12,21 +12,37 @@ const LOADING_MESSAGES = [
   'Preparing your answer...',
 ]
 
+const getInitialMessages = (): ChatMessage[] => {
+  try {
+    const saved = sessionStorage.getItem('chat_messages')
+    if (saved) return JSON.parse(saved)
+  } catch {
+    console.warn('Failed to parse saved chat messages, starting fresh')
 
-export const ChatPage = () => {
-  const [messages, setMessages] = useState<ChatMessage[]>([
+  }
+  return [
     {
       role: 'assistant',
       content: 'Welcome to CommodEx! Ask me anything about commodity prices and procurement decisions.'
     }
-  ])
+  ]
+}
+
+// const [messages, setMessages] = useState<ChatMessage[]>(getInitialMessages)
+
+
+export const ChatPage = () => {
+  // const [messages, setMessages] = useState<ChatMessage[]>([
+  //   {
+  //     role: 'assistant',
+  //     content: 'Welcome to CommodEx! Ask me anything about commodity prices and procurement decisions.'
+  //   }
+  // ])
+  const [messages, setMessages] = useState<ChatMessage[]>(getInitialMessages)
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
   const [loadingMsgIndex, setLoadingMsgIndex] = useState(0)
-
-
-
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -42,6 +58,10 @@ export const ChatPage = () => {
     }, 2000)
     return () => clearInterval(interval)
   }, [loading])
+
+  useEffect(() => {
+    sessionStorage.setItem('chat_messages', JSON.stringify(messages))
+  }, [messages])
 
   const sendMessage = async () => {
     if (!input.trim()) return

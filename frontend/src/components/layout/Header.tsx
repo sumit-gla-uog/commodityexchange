@@ -6,15 +6,15 @@ interface HeaderProps {
   title: string
 }
 
-const user = JSON.parse(localStorage.getItem('user') || '{}')
-
-const handleLogout = () => {
-  localStorage.removeItem('token')
-  localStorage.removeItem('user')
-  window.location.href = '/'
-}
-
 export const Header = ({ title }: HeaderProps) => {
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    window.location.href = '/'
+  }
+
   return (
     <header className="app-header">
       <Text styleAs="h3" className="text-white font-semibold">
