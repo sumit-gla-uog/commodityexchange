@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { Button, Text, StackLayout } from '@salt-ds/core'
+import { Text } from '@salt-ds/core'
 import { BASE_URL } from '../../api/client'
+import styles from './LoginForm.module.css'
 
 interface LoginFormData {
   email: string
@@ -11,18 +12,6 @@ interface LoginFormData {
 
 interface LoginFormProps {
   onSwitchToRegister: () => void
-}
-
-const inputStyle = {
-  width: '100%',
-  backgroundColor: '#1a1f2e',
-  border: '1px solid #2d3748',
-  borderRadius: '8px',
-  padding: '12px 16px',
-  color: '#ffffff',
-  fontSize: '14px',
-  boxSizing: 'border-box' as const,
-  outline: 'none'
 }
 
 export const LoginForm = ({ onSwitchToRegister }: LoginFormProps) => {
@@ -53,54 +42,42 @@ export const LoginForm = ({ onSwitchToRegister }: LoginFormProps) => {
   }
 
   return (
-    <StackLayout gap={5}>
-      <StackLayout gap={5}>
-        <Text styleAs="h2" style={{ color: '#ffffff', fontWeight: 'bold' }}>Welcome Back</Text>
-        <Text styleAs="label" style={{ color: '#94a3b8' }}>Sign in to your CommodEx account</Text>
-      </StackLayout>
+    <div className={styles.wrapper}>
+      <div className={styles.headerGroup}>
+        <Text styleAs="h2" className={styles.title}>Welcome Back</Text>
+        <Text styleAs="label" className={styles.subtitle}>Sign in to your CommodEx account</Text>
+      </div>
 
-      <StackLayout gap={5}>
-        <div>
-          <label style={{ color: '#94a3b8', fontSize: '16px', display: 'block', marginBottom: '6px' }}>Email</label>
-          <input {...register('email', { required: true })} type="email" placeholder="you@company.com" style={inputStyle} />
-          {errors.email && <Text style={{ color: '#f87171', fontSize: '12px' }}>Required</Text>}
+      <div className={styles.fieldsGroup}>
+        <div className={styles.field}>
+          <label className={styles.label}>Email</label>
+          <input {...register('email', { required: true })} type="email" placeholder="you@company.com" className={styles.input} />
+          {errors.email && <Text className={styles.errorText}>Required</Text>}
         </div>
 
-        <div>
-          <label style={{ color: '#94a3b8', fontSize: '16px', display: 'block', marginBottom: '6px' }}>Password</label>
-          <input {...register('password', { required: true })} type="password" placeholder="••••••••" style={inputStyle} />
-          {errors.password && <Text style={{ color: '#f87171', fontSize: '12px' }}>Required</Text>}
+        <div className={styles.field}>
+          <label className={styles.label}>Password</label>
+          <input {...register('password', { required: true })} type="password" placeholder="••••••••" className={styles.input} />
+          {errors.password && <Text className={styles.errorText}>Required</Text>}
         </div>
 
-        {error && <Text style={{ color: '#f87171', fontSize: '13px' }}>{error}</Text>}
+        {error && <Text className={styles.formError}>{error}</Text>}
 
         <button
           onClick={handleSubmit(onSubmit)}
-          // sentiment="accented"
           disabled={loading}
-          style={{
-            width: '100%',
-            backgroundColor: '#3b82f6',
-            color: '#ffffff',
-            border: 'none',
-            borderRadius: '8px',
-            padding: '13px',
-            fontWeight: '600',
-            fontSize: '15px',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            opacity: loading ? 0.7 : 1
-          }}
+          className={styles.submitButton}
         >
           {loading ? 'Signing in...' : 'Login'}
         </button>
 
-        <Text style={{ textAlign: 'center', color: '#94a3b8', fontSize: '14px' }}>
+        <Text className={styles.footerText}>
           Don't have an account?{' '}
-          <span onClick={onSwitchToRegister} style={{ color: '#3b82f6', cursor: 'pointer', fontWeight: '500' }}>
+          <span onClick={onSwitchToRegister} className={styles.registerLink}>
             Register Now
           </span>
         </Text>
-      </StackLayout>
-    </StackLayout>
+      </div>
+    </div>
   )
 }
