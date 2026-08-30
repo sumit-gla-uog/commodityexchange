@@ -7,6 +7,8 @@ import { BASE_URL } from '../../api/client'
 import styles from './OrdersPage.module.css'
 import type { Order } from '../../types/commodity'
 import { OrderCard } from '../../components/orders/OrderCard'
+import { useOrders } from '../../hooks/useOrders'
+
 
 const darkTheme = themeQuartz.withParams({
   backgroundColor: '#1f2937',
@@ -30,27 +32,29 @@ const StatusBadge = ({ value }: { value: string }) => (
 )
 
 export const OrdersPage = () => {
-  const [orders, setOrders] = useState<Order[]>([])
+  // const [orders, setOrders] = useState<Order[]>([])
+  const { orders, isLoading, refetch } = useOrders()
+
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
 
-  const fetchOrders = useCallback(() => {
-    fetch(`${BASE_URL}/api/orders/`)
-      .then(res => res.json())
-      .then(data => setOrders(data.orders))
-  }, [])
+  // const fetchOrders = useCallback(() => {
+  //   fetch(`${BASE_URL}/api/orders/`)
+  //     .then(res => res.json())
+  //     .then(data => setOrders(data.orders))
+  // }, [])
 
-  useEffect(() => {
-    fetchOrders()
-  }, [fetchOrders])
+  // useEffect(() => {
+  //   fetchOrders()
+  // }, [fetchOrders])
 
   const handleOrderUpdated = () => {
-    fetchOrders()
-  }
+  refetch()
+}
 
   const totalMatches = orders.length
   const pendingCount = orders.filter(o => o.status === 'pending').length
   const totalValue = orders
-    .filter(o => o.status === 'settled')
+    // .filter(o => o.status === 'settled') // calculating totalvalue of all as there is no way of settlement because of legagl financial issue
     .reduce((sum, o) => sum + Math.abs(o.fair_value_delta), 0)
 
   const columnDefs = useMemo((): ColDef<Order>[] => [
@@ -109,7 +113,7 @@ export const OrdersPage = () => {
         </div>
         <div className={styles.summaryCard}>
           <p className={styles.summaryLabel}>Total Value Exchanged</p>
-          <p className={styles.summaryValueGreen}>${(totalValue / 1000).toFixed(1)}K</p>
+          <p className={styles.summaryValueGreen}>${totalValue.toLocaleString()}K</p>
           <p className={styles.summaryFootnote}>USD equivalent</p>
         </div>
       </div>

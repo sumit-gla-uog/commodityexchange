@@ -5,9 +5,12 @@ router = APIRouter()
 
 
 @router.get("/")
-def get_orders():
+def get_orders(user_id: str = None):
     supabase = get_supabase()
-    response = supabase.table("orders").select("*").order("created_at", desc=True).execute()
+    query = supabase.table("orders").select("*").order("created_at", desc=True)
+    if user_id:
+        query = query.or_(f"initiator_user_id.eq.{user_id},counterparty_user_id.eq.{user_id}")
+    response = query.execute()
     return {"orders": response.data}
 
 @router.post("/")

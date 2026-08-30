@@ -8,6 +8,7 @@ interface CreateListingPayload {
   commodity_wanted: string
   quantity_wanted_mt: number
   location_uk: string
+  user_id?: string  
 }
 
 export const useCreateListing = () => {
@@ -18,10 +19,17 @@ export const useCreateListing = () => {
     setSubmitting(true)
     setError(false)
     try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}')
+      console.log('user from localStorage:', user)
+console.log('payload with user_id:', { ...payload, user_id: user.id })
       const res = await fetch(`${BASE_URL}/api/barter/listings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+        ...payload,
+        user_id: user.id  
+      }),
+
       })
       if (!res.ok) throw new Error('Failed to create listing')
       return true
