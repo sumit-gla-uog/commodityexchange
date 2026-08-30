@@ -50,7 +50,7 @@ export const OrdersPage = () => {
   const totalMatches = orders.length
   const pendingCount = orders.filter(o => o.status === 'pending').length
   const totalValue = orders
-    .filter(o => o.status === 'settled')
+    // .filter(o => o.status === 'settled') // calculating totalvalue of all as there is no way of settlement because of legagl financial issue
     .reduce((sum, o) => sum + Math.abs(o.fair_value_delta), 0)
 
   const columnDefs = useMemo((): ColDef<Order>[] => [
@@ -109,7 +109,7 @@ export const OrdersPage = () => {
         </div>
         <div className={styles.summaryCard}>
           <p className={styles.summaryLabel}>Total Value Exchanged</p>
-          <p className={styles.summaryValueGreen}>${(totalValue / 1000).toFixed(1)}K</p>
+          <p className={styles.summaryValueGreen}>${totalValue.toLocaleString()}K</p>
           <p className={styles.summaryFootnote}>USD equivalent</p>
         </div>
       </div>
