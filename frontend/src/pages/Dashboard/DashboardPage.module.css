@@ -1,0 +1,188 @@
+.page {
+  display: flex;
+  gap: 24px;
+}
+
+.leftColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.controlsRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.categoryButton {
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background-color: #1f2937;
+  color: #9ca3af;
+  transition: all 0.2s;
+}
+
+.categoryButtonActive {
+  background-color: #22c55e;
+  color: #000000;
+}
+
+.searchInput {
+  margin-left: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #374151;
+  background-color: #1f2937;
+  color: #ffffff;
+  font-size: 13px;
+  width: 200px;
+}
+
+.searchInput::placeholder {
+  color: #6b7280;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.searchInputFull {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #374151;
+  background-color: #1f2937;
+  color: #ffffff;
+  font-size: 13px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.searchInputFull::placeholder {
+  color: #6b7280;
+}
+
+.searchInputFull:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+.refreshButton {
+  padding: 6px 10px;
+  border-radius: 6px;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.subtitle {
+  color: #9ca3af;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.sidePanel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 400px;
+  background-color: #1f2937;
+  border-left: 1px solid #374151;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 100;
+  overflow-y: auto;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panelTitle {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.panelSubtitle {
+  color: #9ca3af;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+}
+
+.priceBox {
+  background-color: #111827;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.priceLabel {
+  color: #9ca3af;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.priceValue {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.priceUnit {
+  color: #9ca3af;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.changeValueUp {
+  color: #4ade80;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.changeValueDown {
+  color: #f87171;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 4px;
+}
