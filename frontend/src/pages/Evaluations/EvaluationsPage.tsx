@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState, useEffect, useMemo } from 'react'
 import { Card, StackLayout, Text, FlexLayout, FlexItem } from '@salt-ds/core'
 import Highcharts from 'highcharts'

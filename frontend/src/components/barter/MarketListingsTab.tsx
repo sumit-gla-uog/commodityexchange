@@ -4,7 +4,7 @@ import type { BarterListing } from '../../types/commodity'
 import styles from './MarketListingsTab.module.css'
 import { Pagination } from '../ui/Pagination'
 
-const PAGE_SIZE = 2
+const PAGE_SIZE = 5
 
 interface MarketListingsTabProps {
   listings: BarterListing[]

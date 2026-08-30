@@ -5,7 +5,7 @@ import { Pagination } from '../ui/Pagination'
 import { useDeleteListing } from '../../hooks/useDeleteListing'
 import { DeleteIcon } from '@salt-ds/icons'
 
-const PAGE_SIZE = 2
+const PAGE_SIZE = 5
 
 interface MyListingsTabProps {
   listings: BarterListing[]
