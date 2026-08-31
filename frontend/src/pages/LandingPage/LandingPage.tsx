@@ -57,14 +57,14 @@ export const LandingPage = () => {
         </div>
 
         <button
-          onClick={() => setIsRegister(false)}
+          onClick={() => setIsRegister(true)}
           style={{
             backgroundColor: '#3b82f6', color: '#ffffff', border: 'none',
             borderRadius: '8px', padding: '8px 20px', fontWeight: '600',
             fontSize: '14px', cursor: 'pointer'
           }}
         >
-          Log In
+          Register
         </button>
       </nav>
 
