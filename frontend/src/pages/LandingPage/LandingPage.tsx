@@ -1,12 +1,29 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LoginForm } from '../LoginPage/LoginForm'
 import { RegisterForm } from '../RegisterPage/RegisterForm'
+import { usePrices } from '../../api/priceService'
 
-// Import your downloaded image here
-// import heroImage from '../../assets/commodity-hero.jpg'
 
 export const LandingPage = () => {
   const [isRegister, setIsRegister] = useState(false)
+  const { commodities } = usePrices()
+  const [carouselIndex, setCarouselIndex] = useState(0)
+
+  const STATS_PER_VIEW = 10
+
+  useEffect(() => {
+    if (commodities.length <= STATS_PER_VIEW) return
+    const interval = setInterval(() => {
+      setCarouselIndex((prev) => (prev + STATS_PER_VIEW) % commodities.length)
+    }, 1500)
+    return () => clearInterval(interval)
+  }, [commodities.length])
+
+  const visibleStats = commodities.length > 0
+    ? Array.from({ length: STATS_PER_VIEW }, (_, i) =>
+        commodities[(carouselIndex + i) % commodities.length]
+      )
+    : []
 
   return (
     <div style={{
@@ -103,24 +120,8 @@ export const LandingPage = () => {
             background: 'linear-gradient(to right, #0d1117 0%, transparent 20%)',
           }} />
 
-          {/* Market Update Badge */}
-          {/* <div style={{
-            position: 'absolute',
-            top: '40px',
-            left: '40px',
-            backgroundColor: 'rgba(255,255,255,0.9)',
-            borderRadius: '8px',
-            padding: '10px 16px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}>
-            <div style={{ width: '8px', height: '8px', backgroundColor: '#22c55e', borderRadius: '50%' }} />
-            <span style={{ color: '#1e293b', fontSize: '13px', fontWeight: '600' }}>Market Update</span>
-          </div> */}
-
           {/* Bottom stats */}
-          <div style={{
+          {/* <div style={{
             position: 'absolute',
             bottom: '40px',
             left: '40px',
@@ -144,7 +145,37 @@ export const LandingPage = () => {
                 <p style={{ color: stat.color, fontSize: '14px', fontWeight: '700', margin: 0 }}>{stat.value}</p>
               </div>
             ))}
-          </div>
+          </div> */}
+
+          {/* Bottom stats — auto-rotating carousel */}
+<div style={{
+  position: 'absolute',
+  bottom: '40px',
+  left: '40px',
+  right: '40px',
+  display: 'flex',
+  gap: '12px',
+  overflow: 'hidden'
+}}>
+  {visibleStats.map(stat => (
+    <div key={stat.name} style={{
+      backgroundColor: 'rgba(0,0,0,0.7)',
+      borderRadius: '8px',
+      padding: '10px 16px',
+      backdropFilter: 'blur(10px)',
+      maxWidth: '160px',
+      transition: 'opacity 0.4s ease'
+    }}>
+      <p style={{ color: '#94a3b8', fontSize: '11px', margin: '0 0 2px 0' }}>{stat.name}</p>
+      <p style={{
+        color: stat.trend === 'up' ? '#22c55e' : '#f87171',
+        fontSize: '14px', fontWeight: '700', margin: 0
+      }}>
+        {stat.trend === 'up' ? '+' : ''}{stat.monthly_change}%
+      </p>
+    </div>
+  ))}
+</div>
         </div>
       </div>
     </div>

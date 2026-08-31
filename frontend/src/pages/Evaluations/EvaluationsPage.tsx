@@ -220,7 +220,7 @@ export const EvaluationsPage = () => {
       </FlexLayout>
 
       <FlexLayout direction="row" style={{ gap: '16px' }}>
-        <FlexItem >
+        <FlexItem  style={{ flex: 6 }}>
           <Card className={styles.card}>
             <HighchartsReact.default
               key={`chart-${results.faithfulness}`}
@@ -233,7 +233,7 @@ export const EvaluationsPage = () => {
           </Card>
         </FlexItem>
 
-        <FlexItem>
+        <FlexItem style={{ flex: 4 }}>
           <Card className={styles.guardrailCard}>
             <StackLayout gap={1}>
               <FlexLayout gap={1} align="center">

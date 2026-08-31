@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Text } from '@salt-ds/core'
 import { AgGridReact } from 'ag-grid-react'

@@ -63,7 +63,7 @@
 .guardrailCard {
   background-color: #1f2937;
   border: 1px solid #374151;
-  width: 360px;
+  /* width: 360px; */
 }
 
 .statusDot {
