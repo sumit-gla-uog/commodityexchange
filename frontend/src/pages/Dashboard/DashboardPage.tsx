@@ -10,7 +10,7 @@ import styles from './DashboardPage.module.css'
 type Category = 'All' | 'Metals' | 'Energy' | 'Agriculture'
 
 const CATEGORIES: Category[] = ['All', 'Metals', 'Energy', 'Agriculture']
-const PAGE_SIZE = 8
+const PAGE_SIZE = 10
 
 export const DashboardPage = () => {
   const { commodities, isLoading, isError, mutate } = usePrices()

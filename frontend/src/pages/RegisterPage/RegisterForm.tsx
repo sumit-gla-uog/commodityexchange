@@ -77,13 +77,13 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
 
         {error && <Text className={styles.formError}>{error}</Text>}
 
-        <Button
+        <button
           onClick={handleSubmit(onSubmit)}
           disabled={loading}
           className={styles.submitButton}
         >
           {loading ? 'Creating account...' : 'Create Account'}
-        </Button>
+        </button>
 
         <Text className={styles.footerText}>
           Already have an account?{' '}
