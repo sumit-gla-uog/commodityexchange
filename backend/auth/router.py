@@ -7,6 +7,8 @@ import os
 from datetime import datetime, timedelta
 from db.client import get_supabase
 from dotenv import load_dotenv
+from functools import lru_cache
+
 
 load_dotenv()
 
@@ -16,6 +18,10 @@ security = HTTPBearer()
 JWT_SECRET = os.getenv("JWT_SECRET", "commodex-secret-key-2026")
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRE_HOURS = 24
+
+@lru_cache()
+def get_db():
+    return get_supabase()
 
 
 # Request models
@@ -51,9 +57,7 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
 
 
 @router.post("/register")
-def register(request: RegisterRequest):
-    supabase = get_supabase()
-
+def register(request: RegisterRequest, supabase = Depends(get_db)):
     # Check if email already exists
     existing = supabase.table("users").select("id").eq("email", request.email).execute()
     if existing.data:
@@ -85,9 +89,7 @@ def register(request: RegisterRequest):
 
 
 @router.post("/login")
-def login(request: LoginRequest):
-    supabase = get_supabase()
-
+def login(request: LoginRequest, supabase = Depends(get_db)):
     # Find user
     response = supabase.table("users").select("*").eq("email", request.email).execute()
     if not response.data:
@@ -112,8 +114,7 @@ def login(request: LoginRequest):
 
 
 @router.get("/me")
-def get_me(payload: dict = Depends(verify_token)):
-    supabase = get_supabase()
+def get_me(payload: dict = Depends(verify_token), supabase = Depends(get_db)):
     response = supabase.table("users").select("id, email, sme_name, location_uk").eq("id", payload["user_id"]).execute()
     if not response.data:
         raise HTTPException(status_code=404, detail="User not found")
