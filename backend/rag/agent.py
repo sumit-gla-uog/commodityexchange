@@ -131,7 +131,8 @@ def create_commodity_agent():
     llm = ChatGroq(
         model="qwen/qwen3.6-27b",
         api_key=os.getenv("GROQ_API_KEY"),
-        temperature=0.2
+        temperature=0.2,
+        max_tokens=900 # staying safely under the 1000 OTPM limit
     )
 
     tools = [get_historical_context, get_live_price, get_commodity_news]
@@ -161,6 +162,9 @@ def agentic_query(user_query: str) -> str:
     try:
         agent_executor = create_commodity_agent()
         result = agent_executor.invoke({"input": user_query})
-        return result["output"]
+        answer = result.get("output", "").strip()
+        if not answer:
+            return "I wasn't able to generate a complete answer for this query. Please try rephrasing or ask about a specific commodity."
+        return answer
     except Exception as e:
         return f"Agent error: {str(e)}"
