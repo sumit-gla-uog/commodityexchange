@@ -1,5 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
+from functools import lru_cache
 from db.client import get_supabase
 import pandas as pd
 import os
@@ -10,6 +11,11 @@ CSV_PATH = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     "data", "worldbank_clean.csv"
 )
+
+
+@lru_cache()
+def get_db():
+    return get_supabase()
 
 
 def get_latest_price(commodity: str):
@@ -34,7 +40,7 @@ def calculate_fair_value(listing_a: dict, listing_b: dict):
     # delta = abs(value_a - value_b)
     delta = value_a - value_b
     higher = max(value_a, value_b)
-    # delta_pct = (delta / higher) * 100
+     # delta_pct = (delta / higher) * 100
     delta_pct = (abs(delta) / higher) * 100
 
     return {
@@ -55,12 +61,11 @@ class ListingRequest(BaseModel):
     commodity_wanted: str
     quantity_wanted_mt: float
     location_uk: str
-    user_id: str = None 
+    user_id: str = None
 
 
 @router.get("/listings")
-def get_listings(status: str = "active"):
-    supabase = get_supabase()
+def get_listings(status: str = "active", supabase = Depends(get_db)):
     query = supabase.table("listings").select("*")
     if status != "all":
         query = query.eq("status", status)
@@ -74,8 +79,7 @@ def debug_prices():
 
 
 @router.post("/listings")
-def create_listing(request: ListingRequest):
-    supabase = get_supabase()
+def create_listing(request: ListingRequest, supabase = Depends(get_db)):
     data = {
         "sme_name": request.sme_name,
         "commodity_offered": request.commodity_offered,
@@ -91,8 +95,7 @@ def create_listing(request: ListingRequest):
 
 
 @router.get("/listings/{listing_id}")
-def get_listing(listing_id: str):
-    supabase = get_supabase()
+def get_listing(listing_id: str, supabase = Depends(get_db)):
     response = supabase.table("listings").select("*").eq("id", listing_id).execute()
     if not response.data:
         raise HTTPException(status_code=404, detail="Listing not found")
@@ -100,9 +103,7 @@ def get_listing(listing_id: str):
 
 
 @router.post("/match/{listing_id}")
-def match_listing(listing_id: str):
-    supabase = get_supabase()
-
+def match_listing(listing_id: str, supabase = Depends(get_db)):
     # Get source listing
     source_res = supabase.table("listings").select("*").eq("id", listing_id).execute()
     if not source_res.data:
@@ -139,22 +140,8 @@ def match_listing(listing_id: str):
 
     if not matches:
         return {"message": "No matches found", "matches": []}
-
-    # Create order in Supabase
-    # Commenting for now as order will be not be created during match
-    # if matches:
-    #     order_data = {
-    #         "party_a_name": source["sme_name"],
-    #         "party_a_commodity": source["commodity_offered"],
-    #         "party_a_quantity": source["quantity_offered_mt"],
-    #         "party_b_name": matches[0]["matched_listing"]["sme_name"],
-    #         "party_b_commodity": matches[0]["matched_listing"]["commodity_offered"],
-    #         "party_b_quantity": matches[0]["matched_listing"]["quantity_offered_mt"],
-    #         "fair_value_delta": matches[0]["fair_value"]["delta_usd"] if matches[0]["fair_value"] else 0,
-    #         "status": "pending"
-    #     }
-    #     supabase.table("orders").insert(order_data).execute()
-
+    
+    
     return {
         "source_listing": source,
         "matches": matches,
@@ -162,18 +149,16 @@ def match_listing(listing_id: str):
     }
 
 
-# to update status of the listing once order has been created so that it doesn't show it to other users/sme
 @router.patch("/listings/{listing_id}")
-def update_listing_status(listing_id: str, update: dict):
-    supabase = get_supabase()
+def update_listing_status(listing_id: str, update: dict, supabase = Depends(get_db)):
     response = supabase.table("listings").update({"status": update["status"]}).eq("id", listing_id).execute()
     if not response.data:
         raise HTTPException(status_code=404, detail="Listing not found")
     return response.data[0]
 
+
 @router.delete("/listings/{listing_id}")
-def delete_listing(listing_id: str):
-    supabase = get_supabase()
+def delete_listing(listing_id: str, supabase = Depends(get_db)):
     listing_res = supabase.table("listings").select("status").eq("id", listing_id).execute()
     if not listing_res.data:
         raise HTTPException(status_code=404, detail="Listing not found")
