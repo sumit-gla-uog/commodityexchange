@@ -18,16 +18,17 @@ const TABS: { id: BarterTab; label: string }[] = [
   { id: 'orders', label: 'Orders & History' },
 ]
 
-const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
+// const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
 
 export const BarterPage = () => {
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
   const { orders, isLoading: ordersLoading, isError: ordersError, fetchOrders, refetch: refetchOrders } = useOrderHistory()
   const [activeTab, setActiveTab] = useState<BarterTab>('market')
   const [search, setSearch] = useState('')
   const { listings, isLoading, isError, refetch } = useListings()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [matchedListingId, setMatchedListingId] = useState<string | null>(null)
-  
+
 
   // const searchFilter = (l: typeof listings[number]) =>
   //   l.commodity_offered.toLowerCase().includes(search.toLowerCase()) ||
@@ -39,13 +40,13 @@ export const BarterPage = () => {
 
   const filteredMarket = useMemo(() => {
     return listings
-    .filter((l) => l.status === 'active')
-    .filter((l) =>
-      l.commodity_offered.toLowerCase().includes(search.toLowerCase()) ||
-      l.commodity_wanted.toLowerCase().includes(search.toLowerCase()) ||
-      l.location_uk.toLowerCase().includes(search.toLowerCase()) ||
-      l.sme_name.toLowerCase().includes(search.toLowerCase())
-     )
+      .filter((l) => l.status === 'active')
+      .filter((l) =>
+        l.commodity_offered.toLowerCase().includes(search.toLowerCase()) ||
+        l.commodity_wanted.toLowerCase().includes(search.toLowerCase()) ||
+        l.location_uk.toLowerCase().includes(search.toLowerCase()) ||
+        l.sme_name.toLowerCase().includes(search.toLowerCase())
+      )
   }, [listings, search])
 
   const filteredMine = useMemo(() => {
@@ -60,9 +61,9 @@ export const BarterPage = () => {
   }, [listings, search])
 
   const handleTabClick = (tabId: BarterTab) => {
-  setActiveTab(tabId)
-  if (tabId === 'orders') fetchOrders()
-}
+    setActiveTab(tabId)
+    if (tabId === 'orders') fetchOrders()
+  }
 
   return (
     <div className={styles.page}>
@@ -98,36 +99,36 @@ export const BarterPage = () => {
       {/* {!isLoading && !isError && activeTab === 'market' && (
         <MarketListingsTab listings={filteredMarket} onMatch={(id) => console.log('match', id)} />
       )} */}
-    {!isLoading && !isError && activeTab === 'market' && (
-  <>
-    {matchedListingId && (
-      <MatchResultPanel
-        listingId={matchedListingId}
-        onClose={() => setMatchedListingId(null)}
-        onSuccess={() => {
-          refetch()
-          setMatchedListingId(null)
-        }}
-      />
-    )}
-    <MarketListingsTab
-      listings={filteredMarket}
-      onMatch={(id) => setMatchedListingId(id)}
-    />
-  </>
-)} 
+      {!isLoading && !isError && activeTab === 'market' && (
+        <>
+          {matchedListingId && (
+            <MatchResultPanel
+              listingId={matchedListingId}
+              onClose={() => setMatchedListingId(null)}
+              onSuccess={() => {
+                refetch()
+                setMatchedListingId(null)
+              }}
+            />
+          )}
+          <MarketListingsTab
+            listings={filteredMarket}
+            onMatch={(id) => setMatchedListingId(id)}
+          />
+        </>
+      )}
       {!isLoading && !isError && activeTab === 'my-listings' && (
-        <MyListingsTab listings={filteredMine} onDeleted={refetch}/>
+        <MyListingsTab listings={filteredMine} onDeleted={refetch} />
       )}
       {activeTab === 'orders' && (
-  <>
-    {ordersLoading && <Text className={styles.tabContent}>Loading orders...</Text>}
-    {ordersError && <Text className={styles.tabContent}>Failed to load orders.</Text>}
-    {!ordersLoading && !ordersError && (
-      <OrdersHistoryTab orders={orders} search={search} onOrderUpdated={refetchOrders}/>
-    )}
-  </>
-)}
+        <>
+          {ordersLoading && <Text className={styles.tabContent}>Loading orders...</Text>}
+          {ordersError && <Text className={styles.tabContent}>Failed to load orders.</Text>}
+          {!ordersLoading && !ordersError && (
+            <OrdersHistoryTab orders={orders} search={search} onOrderUpdated={refetchOrders} />
+          )}
+        </>
+      )}
 
       <CreateListingDialog
         open={dialogOpen}
