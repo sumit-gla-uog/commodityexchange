@@ -4,7 +4,7 @@ import { useMatchTrade } from "../../hooks/useMatchTrade";
 
 const mockSource = {
   id: "L1",
-  sme_name: "OM Exchange Ltd",
+  sme_name: "Sumit Exchange Ltd",
   commodity_offered: "Copper",
   quantity_offered_mt: 50,
 };
@@ -168,7 +168,7 @@ describe("useMatchTrade", () => {
         call[0].includes("/api/orders/"),
       );
       const orderBody = JSON.parse(orderCall[1].body);
-      expect(orderBody.party_a_name).toBe("OM Exchange Ltd");
+      expect(orderBody.party_a_name).toBe("Sumit Exchange Ltd");
       expect(orderBody.party_b_name).toBe("Scottish Metals Ltd");
       expect(orderBody.initiator_user_id).toBe("user-123");
       expect(orderBody.counterparty_user_id).toBe("user-999");

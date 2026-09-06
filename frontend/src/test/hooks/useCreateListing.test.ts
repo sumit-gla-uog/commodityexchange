@@ -3,7 +3,7 @@ import { renderHook, waitFor, act } from '@testing-library/react'
 import { useCreateListing } from '../../hooks/useCreateListing'
 
 const validPayload = {
-  sme_name: 'OM Exchange Ltd',
+  sme_name: 'Sumit Exchange Ltd',
   commodity_offered: 'Copper',
   quantity_offered_mt: 50,
   commodity_wanted: 'Aluminum',

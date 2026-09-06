@@ -19,9 +19,9 @@ describe('Header', () => {
   })
 
   it('displays the logged-in user sme_name from localStorage', () => {
-    localStorage.setItem('user', JSON.stringify({ sme_name: 'OM Exchange Ltd' }))
+    localStorage.setItem('user', JSON.stringify({ sme_name: 'Sumit Exchange Ltd' }))
     render(<Header title="Dashboard" />)
-    expect(screen.getByText('OM Exchange Ltd')).toBeInTheDocument()
+    expect(screen.getByText('Sumit Exchange Ltd')).toBeInTheDocument()
   })
 
   it('renders without crashing when localStorage has no user', () => {
@@ -31,7 +31,7 @@ describe('Header', () => {
 
   it('clears token, user, and redirects on logout click', () => {
     localStorage.setItem('token', 'fake-token')
-    localStorage.setItem('user', JSON.stringify({ sme_name: 'OM Exchange Ltd' }))
+    localStorage.setItem('user', JSON.stringify({ sme_name: 'Sumit Exchange Ltd' }))
 
     // window.location.href is not settable directly in jsdom without this workaround
     delete (window as any).location

@@ -19,7 +19,7 @@ describe('useOrderHistory', () => {
   })
 
   it('fetchOrders loads orders scoped to the current user', async () => {
-    const mockOrders = [{ id: 'O1', party_a_name: 'OM Exchange Ltd' }]
+    const mockOrders = [{ id: 'O1', party_a_name: 'Sumit Exchange Ltd' }]
     ;(fetch as any).mockResolvedValue({
       json: async () => ({ orders: mockOrders }),
     })

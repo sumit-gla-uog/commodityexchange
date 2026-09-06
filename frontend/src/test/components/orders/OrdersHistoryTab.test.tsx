@@ -11,7 +11,7 @@ const makeOrder = (overrides: Partial<Order>): Order => ({
   id: 'order-1',
   created_at: '2026-08-30T21:34:05Z',
   updated_at: '2026-08-30T21:34:05Z',
-  party_a_name: 'OM Exchange Ltd',
+  party_a_name: 'Sumit Exchange Ltd',
   party_a_commodity: 'Copper',
   party_a_quantity: 50,
   party_b_name: 'Scottish Metals Ltd',

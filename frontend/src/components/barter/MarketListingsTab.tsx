@@ -4,7 +4,7 @@ import styles from './MarketListingsTab.module.css'
 import { Pagination } from '../ui/Pagination'
 
 const PAGE_SIZE = 5
-const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
+// const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
 
 interface MarketListingsTabProps {
   listings: BarterListing[]
@@ -12,6 +12,7 @@ interface MarketListingsTabProps {
 }
 
 export const MarketListingsTab = ({ listings, onMatch }: MarketListingsTabProps) => {
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
   const [page, setPage] = useState(1)
   const paginatedListings = listings.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 

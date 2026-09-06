@@ -281,7 +281,7 @@ def test_get_listings_returns_all_statuses_when_status_all():
 def test_create_listing_success():
     created = {
         "id": "L1",
-        "sme_name": "OM Exchange Ltd",
+        "sme_name": "Sumit Exchange Ltd",
         "commodity_offered": "Copper",
         "quantity_offered_mt": 50,
         "commodity_wanted": "Aluminum",
@@ -293,7 +293,7 @@ def test_create_listing_success():
     app.dependency_overrides[get_db] = lambda: FakeSupabase({"listings": [created]})
 
     res = client.post("/api/barter/listings", json={
-        "sme_name": "OM Exchange Ltd",
+        "sme_name": "Sumit Exchange Ltd",
         "commodity_offered": "Copper",
         "quantity_offered_mt": 50,
         "commodity_wanted": "Aluminum",
@@ -305,7 +305,7 @@ def test_create_listing_success():
     assert res.status_code == 200
     body = res.json()
     assert body["message"] == "Listing created"
-    assert body["data"]["sme_name"] == "OM Exchange Ltd"
+    assert body["data"]["sme_name"] == "Sumit Exchange Ltd"
 
 
 def test_create_listing_rejects_missing_required_field():
@@ -323,7 +323,7 @@ def test_create_listing_rejects_missing_required_field():
 # GET /listings/{listing_id}
 
 def test_get_listing_returns_single_listing():
-    listing = {"id": "L1", "sme_name": "OM Exchange Ltd"}
+    listing = {"id": "L1", "sme_name": "Sumit Exchange Ltd"}
     app.dependency_overrides[get_db] = lambda: FakeSupabase({"listings": [listing]})
 
     res = client.get("/api/barter/listings/L1")

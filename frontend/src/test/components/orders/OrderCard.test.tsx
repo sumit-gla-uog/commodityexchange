@@ -8,7 +8,7 @@ const baseOrder: Order = {
   id: 'order-123456789',
   created_at: '2026-08-30T21:34:05.288457+00:00',
   updated_at: '2026-08-30T21:34:05.288457+00:00',
-  party_a_name: 'OM Exchange Ltd',
+  party_a_name: 'Sumit Exchange Ltd',
   party_a_commodity: 'Copper',
   party_a_quantity: 50,
   party_b_name: 'Scottish Metals Ltd',
@@ -47,7 +47,7 @@ describe('OrderCard', () => {
   it('shows the settlement line indicating who pays whom for a positive delta', () => {
     render(<OrderCard order={baseOrder} />)
     expect(
-      screen.getByText('Scottish Metals Ltd pays OM Exchange Ltd £512,528')
+      screen.getByText('Scottish Metals Ltd pays Sumit Exchange Ltd £512,528')
     ).toBeInTheDocument()
   })
 
@@ -55,7 +55,7 @@ describe('OrderCard', () => {
     const negativeOrder = { ...baseOrder, fair_value_delta: -512528 }
     render(<OrderCard order={negativeOrder} />)
     expect(
-      screen.getByText('OM Exchange Ltd pays Scottish Metals Ltd £512,528')
+      screen.getByText('Sumit Exchange Ltd pays Scottish Metals Ltd £512,528')
     ).toBeInTheDocument()
   })
 
