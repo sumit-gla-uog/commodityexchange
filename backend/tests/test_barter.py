@@ -246,3 +246,120 @@ def test_delete_listing_returns_404_for_unknown_listing():
     app.dependency_overrides.clear()
 
     assert res.status_code == 404
+
+# GET /listings
+
+def test_get_listings_returns_active_by_default():
+    app.dependency_overrides[get_db] = lambda: FakeSupabase({
+        "listings": [{"id": "L1", "status": "active"}]
+    })
+
+    res = client.get("/api/barter/listings")
+    app.dependency_overrides.clear()
+
+    assert res.status_code == 200
+    assert res.json()["listings"] == [{"id": "L1", "status": "active"}]
+
+
+def test_get_listings_returns_all_statuses_when_status_all():
+    app.dependency_overrides[get_db] = lambda: FakeSupabase({
+        "listings": [
+            {"id": "L1", "status": "active"},
+            {"id": "L2", "status": "matched"},
+        ]
+    })
+
+    res = client.get("/api/barter/listings", params={"status": "all"})
+    app.dependency_overrides.clear()
+
+    assert res.status_code == 200
+    assert len(res.json()["listings"]) == 2
+
+
+# POST /listings
+
+def test_create_listing_success():
+    created = {
+        "id": "L1",
+        "sme_name": "OM Exchange Ltd",
+        "commodity_offered": "Copper",
+        "quantity_offered_mt": 50,
+        "commodity_wanted": "Aluminum",
+        "quantity_wanted_mt": 197,
+        "location_uk": "London",
+        "status": "active",
+        "user_id": None,
+    }
+    app.dependency_overrides[get_db] = lambda: FakeSupabase({"listings": [created]})
+
+    res = client.post("/api/barter/listings", json={
+        "sme_name": "OM Exchange Ltd",
+        "commodity_offered": "Copper",
+        "quantity_offered_mt": 50,
+        "commodity_wanted": "Aluminum",
+        "quantity_wanted_mt": 197,
+        "location_uk": "London",
+    })
+    app.dependency_overrides.clear()
+
+    assert res.status_code == 200
+    body = res.json()
+    assert body["message"] == "Listing created"
+    assert body["data"]["sme_name"] == "OM Exchange Ltd"
+
+
+def test_create_listing_rejects_missing_required_field():
+    res = client.post("/api/barter/listings", json={
+        "commodity_offered": "Copper",
+        "quantity_offered_mt": 50,
+        "commodity_wanted": "Aluminum",
+        "quantity_wanted_mt": 197,
+        "location_uk": "London",
+    })
+
+    assert res.status_code == 422
+
+
+# GET /listings/{listing_id}
+
+def test_get_listing_returns_single_listing():
+    listing = {"id": "L1", "sme_name": "OM Exchange Ltd"}
+    app.dependency_overrides[get_db] = lambda: FakeSupabase({"listings": [listing]})
+
+    res = client.get("/api/barter/listings/L1")
+    app.dependency_overrides.clear()
+
+    assert res.status_code == 200
+    assert res.json()["id"] == "L1"
+
+
+def test_get_listing_returns_404_for_unknown_id():
+    app.dependency_overrides[get_db] = lambda: FakeSupabase({"listings": []})
+
+    res = client.get("/api/barter/listings/unknown-id")
+    app.dependency_overrides.clear()
+
+    assert res.status_code == 404
+    assert res.json()["detail"] == "Listing not found"
+
+
+#PATCH /listings/{listing_id}
+
+def test_update_listing_status_success():
+    updated = {"id": "L1", "status": "matched"}
+    app.dependency_overrides[get_db] = lambda: FakeSupabase({"listings": [updated]})
+
+    res = client.patch("/api/barter/listings/L1", json={"status": "matched"})
+    app.dependency_overrides.clear()
+
+    assert res.status_code == 200
+    assert res.json()["status"] == "matched"
+
+
+def test_update_listing_status_returns_404_for_unknown_listing():
+    app.dependency_overrides[get_db] = lambda: FakeSupabase({"listings": []})
+
+    res = client.patch("/api/barter/listings/unknown-id", json={"status": "matched"})
+    app.dependency_overrides.clear()
+
+    assert res.status_code == 404
