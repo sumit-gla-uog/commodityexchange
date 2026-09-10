@@ -72,8 +72,8 @@ def test_agentic_chat_returns_500_on_unexpected_error(mock_guards, mock_agentic_
 
     res = client.post("/api/chat/agentic", json={"query": "oil prices?"})
 
-    assert res.status_code == 500
-    assert "LLM provider timeout" in res.json()["detail"]
+    assert res.status_code == 200
+    assert res.json()["answer"] == "Sorry, I had trouble processing that query. Please try rephrasing it."
 
 
 def test_agentic_chat_rejects_missing_query_field():

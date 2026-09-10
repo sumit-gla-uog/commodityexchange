@@ -7,7 +7,10 @@ import { AgGridReact } from 'ag-grid-react'
 import { themeQuartz } from 'ag-grid-community'
 import type { ColDef } from 'ag-grid-community'
 import { BASE_URL } from '../../api/client'
+import { useGuardrailLogs } from '../../hooks/useGuardrailLogs'
+import { Pagination } from '../../components/ui/Pagination'
 import styles from './EvaluationsPage.module.css'
+// import { useGuardrailLogs } from '..';
 
 interface PerQuestion {
   question: string
@@ -44,13 +47,13 @@ const statusColors: Record<string, { bg: string; text: string; dot: string }> = 
   FLAGGED: { bg: '#451a03', text: '#fb923c', dot: '#f97316' },
 }
 
-const FALLBACK_GUARDRAIL_LOGS: GuardrailLog[] = [
-  { status: 'BLOCKED', query: 'What is Bitcoin price?', reason: 'Non-commodity asset detected', timestamp: '09:42 BST' },
-  { status: 'PASSED', query: 'Should I buy wheat now?', reason: 'Valid commodity intent', timestamp: '09:38 BST' },
-  { status: 'FLAGGED', query: 'Predict gold in 2030', reason: 'Speculative long-range forecast', timestamp: '09:31 BST' },
-  { status: 'BLOCKED', query: 'Best crypto exchange UK?', reason: 'Non-commodity topic', timestamp: '09:14 BST' },
-  { status: 'PASSED', query: 'Copper LME 3-month outlook', reason: 'Valid commodity intent', timestamp: '08:57 BST' },
-]
+// const FALLBACK_GUARDRAIL_LOGS: GuardrailLog[] = [
+//   { status: 'BLOCKED', query: 'What is Bitcoin price?', reason: 'Non-commodity asset detected', timestamp: '09:42 BST' },
+//   { status: 'PASSED', query: 'Should I buy wheat now?', reason: 'Valid commodity intent', timestamp: '09:38 BST' },
+//   { status: 'FLAGGED', query: 'Predict gold in 2030', reason: 'Speculative long-range forecast', timestamp: '09:31 BST' },
+//   { status: 'BLOCKED', query: 'Best crypto exchange UK?', reason: 'Non-commodity topic', timestamp: '09:14 BST' },
+//   { status: 'PASSED', query: 'Copper LME 3-month outlook', reason: 'Valid commodity intent', timestamp: '08:57 BST' },
+// ]
 
 const ScoreCard = ({ label, score, planned = false }: {
   label: string
@@ -84,16 +87,13 @@ const ScoreCard = ({ label, score, planned = false }: {
 
 export const EvaluationsPage = () => {
    const [results, setResults] = useState<EvalResults | null>(null)
-  const [guardrailLogs, setGuardrailLogs] = useState<GuardrailLog[]>([])
+  const { logs: guardrailLogs, total: guardrailTotal, page: guardrailPage, setPage: setGuardrailPage } = useGuardrailLogs(5)
 
   useEffect(() => {
     fetch(`${BASE_URL}/api/evals`)
       .then(res => res.json())
       .then(data => setResults(data))
       .catch(() => setResults(null))
-
-    // Guardrail endpoint not implemented yet — using fallback
-    setGuardrailLogs(FALLBACK_GUARDRAIL_LOGS)
   }, [])
 
   const columnDefs = useMemo((): ColDef<PerQuestion>[] => [
@@ -259,7 +259,15 @@ export const EvaluationsPage = () => {
                     </div>
                   )
                 })}
+                <Pagination
+  currentPage={guardrailPage}
+  totalItems={guardrailTotal}
+  pageSize={5}
+  onPageChange={setGuardrailPage}
+/>
+
               </StackLayout>
+              
             </StackLayout>
           </Card>
         </FlexItem>

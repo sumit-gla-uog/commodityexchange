@@ -3,11 +3,17 @@ import json
 import re
 from groq import Groq
 from dotenv import load_dotenv
+from functools import lru_cache
+from db.client import get_supabase
+from guardrails.service import log_guardrail_result
 import json_repair
+import re
 
 load_dotenv()
 
-import re
+@lru_cache()
+def get_db():
+    return get_supabase()
 
 # def parse_json_response(text: str) -> dict:
 #     # Removed <think>...</think> blocks
@@ -216,11 +222,12 @@ def run_all_guards(query: str, answer: str = "", context_chunks: list = []) -> d
     """
     # Input guards
     # print('run_all_guards called')
+    supabase = get_db()
 
     toxicity_result = toxicity_guard(query)
     # print('toxicity done:', toxicity_result)
     if not toxicity_result["passed"]:
-        return {
+        result = {
             "query": query,
             "toxicity_guard": toxicity_result,
             "topic_guard": None,
@@ -229,10 +236,12 @@ def run_all_guards(query: str, answer: str = "", context_chunks: list = []) -> d
             "overall_passed": False,
             "blocked_at": "input"
         }
+        log_guardrail_result(result, supabase)
+        return result
 
     topic_result = topic_guard(query)
     if not topic_result["passed"]:
-        return {
+        result = {
             "query": query,
             "toxicity_guard": toxicity_result,
             "topic_guard": topic_result,
@@ -241,6 +250,9 @@ def run_all_guards(query: str, answer: str = "", context_chunks: list = []) -> d
             "overall_passed": False,
             "blocked_at": "input"
         }
+        log_guardrail_result(result, supabase)
+        return result
+
 
     result = {
         "query": query,
@@ -260,4 +272,5 @@ def run_all_guards(query: str, answer: str = "", context_chunks: list = []) -> d
         result["length_guard"] = len_result
         result["overall_passed"] = hall_result["passed"] and len_result["passed"]
 
+    log_guardrail_result(result, supabase)
     return result
