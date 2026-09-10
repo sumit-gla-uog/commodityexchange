@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { Button, Text, StackLayout } from '@salt-ds/core'
+import { Button, Text } from '@salt-ds/core'
 import { BASE_URL } from '../../api/client'
+import styles from './RegisterForm.module.css'
 
 interface RegisterFormData {
   email: string
@@ -13,18 +14,6 @@ interface RegisterFormData {
 
 interface RegisterFormProps {
   onSwitchToLogin: () => void
-}
-
-const inputStyle = {
-  width: '100%',
-  backgroundColor: '#1a1f2e',
-  border: '1px solid #2d3748',
-  borderRadius: '8px',
-  padding: '12px 16px',
-  color: '#ffffff',
-  fontSize: '14px',
-  boxSizing: 'border-box' as const,
-  outline: 'none'
 }
 
 export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
@@ -56,65 +45,61 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
   }
 
   return (
-    <StackLayout gap={3}>
-      <StackLayout gap={0.5}>
-        <Text styleAs="h2" style={{ color: '#ffffff', fontWeight: 'bold' }}>Create Account</Text>
-        <Text styleAs="label" style={{ color: '#94a3b8' }}>Join CommodEx, B2B Commodity Exchange</Text>
-      </StackLayout>
+    <div className={styles.wrapper}>
+      <div className={styles.headerGroup}>
+        <Text styleAs="h2" className={styles.title}>Create Account</Text>
+        <Text styleAs="label" className={styles.subtitle}>Join CommodEx, B2B Commodity Exchange</Text>
+      </div>
 
-      <StackLayout gap={2}>
-        <div>
-          <label style={{ color: '#94a3b8', fontSize: '12px', display: 'block', marginBottom: '6px' }}>Email</label>
-          <input {...register('email', { required: true })} type="email" placeholder="you@company.com" style={inputStyle} />
-          {errors.email && <Text style={{ color: '#f87171', fontSize: '12px' }}>Required</Text>}
+      <div className={styles.fieldsGroup}>
+        <div className={styles.field}>
+          <label className={styles.label}>Email</label>
+          <input {...register('email', { required: true })} type="email" placeholder="you@company.com" className={styles.input} />
+          {errors.email && <Text className={styles.errorText}>Required</Text>}
         </div>
 
-        <div>
-          <label style={{ color: '#94a3b8', fontSize: '12px', display: 'block', marginBottom: '6px' }}>Password</label>
-          <input {...register('password', { required: true, minLength: 6 })} type="password" placeholder="••••••••" style={inputStyle} />
-          {errors.password && <Text style={{ color: '#f87171', fontSize: '12px' }}>Min 6 characters</Text>}
+        <div className={styles.field}>
+          <label className={styles.label}>Password</label>
+          <input
+            {...register('password', {
+              required: 'Password is required',
+              minLength: { value: 6, message: 'Min 6 characters' }
+            })}
+            type="password"
+            placeholder="********"
+            className={styles.input}
+          />
+          {errors.password && <Text className={styles.errorText}>{errors.password.message}</Text>}
         </div>
 
-        <div>
-          <label style={{ color: '#94a3b8', fontSize: '12px', display: 'block', marginBottom: '6px' }}>Company Name</label>
-          <input {...register('sme_name', { required: true })} placeholder="Acme Steel Ltd" style={inputStyle} />
-          {errors.sme_name && <Text style={{ color: '#f87171', fontSize: '12px' }}>Required</Text>}
+        <div className={styles.field}>
+          <label className={styles.label}>Company Name</label>
+          <input {...register('sme_name', { required: true })} placeholder="Acme Steel Ltd" className={styles.input} />
+          {errors.sme_name && <Text className={styles.errorText}>Required</Text>}
         </div>
 
-        <div>
-          <label style={{ color: '#94a3b8', fontSize: '12px', display: 'block', marginBottom: '6px' }}>Location (UK City)</label>
-          <input {...register('location_uk')} placeholder="Glasgow" style={inputStyle} />
+        <div className={styles.field}>
+          <label className={styles.label}>Location (UK City)</label>
+          <input {...register('location_uk')} placeholder="Glasgow" className={styles.input} />
         </div>
 
-        {error && <Text style={{ color: '#f87171', fontSize: '13px' }}>{error}</Text>}
+        {error && <Text className={styles.formError}>{error}</Text>}
 
-        <Button
+        <button
           onClick={handleSubmit(onSubmit)}
-          // sentiment="accented"
           disabled={loading}
-          style={{
-            width: '100%',
-            backgroundColor: '#3b82f6',
-            color: '#ffffff',
-            border: 'none',
-            borderRadius: '8px',
-            padding: '13px',
-            fontWeight: '600',
-            fontSize: '15px',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            opacity: loading ? 0.7 : 1
-          }}
+          className={styles.submitButton}
         >
           {loading ? 'Creating account...' : 'Create Account'}
-        </Button>
+        </button>
 
-        <Text style={{ textAlign: 'center', color: '#94a3b8', fontSize: '14px' }}>
+        <Text className={styles.footerText}>
           Already have an account?{' '}
-          <span onClick={onSwitchToLogin} style={{ color: '#3b82f6', cursor: 'pointer', fontWeight: '500' }}>
+          <span onClick={onSwitchToLogin} className={styles.loginLink}>
             Login
           </span>
         </Text>
-      </StackLayout>
-    </StackLayout>
+      </div>
+    </div>
   )
 }

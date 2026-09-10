@@ -173,4 +173,8 @@ def get_live_prices():
          # Delay between calls to avoid rate limit
         time.sleep(12)  # 5 calls per minute on free tier
 
+    _cache.clear()
+    _cache.update(live_prices)
+    _cache_time["last"] = time.time()
+
     return {"live_prices": live_prices}

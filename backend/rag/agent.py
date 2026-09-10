@@ -59,7 +59,7 @@ def get_historical_context(query: str) -> str:
         )
         docs = results["documents"][0]
         return "\n".join(docs)
-    except Exception as e:
+    except Exception as e:  
         return f"Historical data unavailable: {str(e)}"
 
 
@@ -129,9 +129,11 @@ def get_commodity_news(commodity: str) -> str:
 # AGENT SETUP
 def create_commodity_agent():
     llm = ChatGroq(
-        model="qwen/qwen3.6-27b",
+        # model="qwen/qwen3.6-27b",
+        model="openai/gpt-oss-120b",
         api_key=os.getenv("GROQ_API_KEY"),
-        temperature=0.2
+        temperature=0.2,
+        max_tokens=1500 
     )
 
     tools = [get_historical_context, get_live_price, get_commodity_news]
@@ -153,7 +155,7 @@ Keep responses concise and actionable for SME procurement managers."""),
     ])
 
     agent = create_tool_calling_agent(llm, tools, prompt)
-    return AgentExecutor(agent=agent, tools=tools, verbose=True, max_iterations=6)
+    return AgentExecutor(agent=agent, tools=tools, verbose=True, max_iterations=12)
 
 
 # MAIN QUERY FUNCTION 
@@ -161,6 +163,9 @@ def agentic_query(user_query: str) -> str:
     try:
         agent_executor = create_commodity_agent()
         result = agent_executor.invoke({"input": user_query})
-        return result["output"]
+        answer = result.get("output", "").strip()
+        if not answer:
+            return "I wasn't able to generate a complete answer for this query. Please try rephrasing or ask about a specific commodity."
+        return answer
     except Exception as e:
         return f"Agent error: {str(e)}"
