@@ -7,7 +7,10 @@ import { AgGridReact } from 'ag-grid-react'
 import { themeQuartz } from 'ag-grid-community'
 import type { ColDef } from 'ag-grid-community'
 import { BASE_URL } from '../../api/client'
+import { useGuardrailLogs } from '../../hooks/useGuardrailLogs'
+import { Pagination } from '../../components/ui/Pagination'
 import styles from './EvaluationsPage.module.css'
+// import { useGuardrailLogs } from '..';
 
 interface PerQuestion {
   question: string
@@ -44,13 +47,13 @@ const statusColors: Record<string, { bg: string; text: string; dot: string }> = 
   FLAGGED: { bg: '#451a03', text: '#fb923c', dot: '#f97316' },
 }
 
-const FALLBACK_GUARDRAIL_LOGS: GuardrailLog[] = [
-  { status: 'BLOCKED', query: 'What is Bitcoin price?', reason: 'Non-commodity asset detected', timestamp: '09:42 BST' },
-  { status: 'PASSED', query: 'Should I buy wheat now?', reason: 'Valid commodity intent', timestamp: '09:38 BST' },
-  { status: 'FLAGGED', query: 'Predict gold in 2030', reason: 'Speculative long-range forecast', timestamp: '09:31 BST' },
-  { status: 'BLOCKED', query: 'Best crypto exchange UK?', reason: 'Non-commodity topic', timestamp: '09:14 BST' },
-  { status: 'PASSED', query: 'Copper LME 3-month outlook', reason: 'Valid commodity intent', timestamp: '08:57 BST' },
-]
+// const FALLBACK_GUARDRAIL_LOGS: GuardrailLog[] = [
+//   { status: 'BLOCKED', query: 'What is Bitcoin price?', reason: 'Non-commodity asset detected', timestamp: '09:42 BST' },
+//   { status: 'PASSED', query: 'Should I buy wheat now?', reason: 'Valid commodity intent', timestamp: '09:38 BST' },
+//   { status: 'FLAGGED', query: 'Predict gold in 2030', reason: 'Speculative long-range forecast', timestamp: '09:31 BST' },
+//   { status: 'BLOCKED', query: 'Best crypto exchange UK?', reason: 'Non-commodity topic', timestamp: '09:14 BST' },
+//   { status: 'PASSED', query: 'Copper LME 3-month outlook', reason: 'Valid commodity intent', timestamp: '08:57 BST' },
+// ]
 
 const ScoreCard = ({ label, score, planned = false }: {
   label: string
@@ -72,28 +75,25 @@ const ScoreCard = ({ label, score, planned = false }: {
       <div className={styles.progressTrack}>
         <div className={styles.progressFill} style={{ backgroundColor: barColor, width: `${score * 100}%` }} />
       </div>
-      <FlexLayout gap={1} align="center" direction="row">
-        <FlexItem className={styles.scoreBadge} style={{ backgroundColor: badgeBg, color }}>
-          {badge}
-        </FlexItem>
-        {planned && <FlexItem className={styles.plannedNote}>* RAGAS Python 3.11 required</FlexItem>}
-      </FlexLayout>
+    <FlexLayout gap={1} align="center" direction="row" style={{ flexWrap: 'wrap' }}>
+  <FlexItem className={styles.scoreBadge} style={{ backgroundColor: badgeBg, color }}>
+    {badge}
+  </FlexItem>
+  {planned && <FlexItem className={styles.plannedNote}>* RAGAS Python 3.11 required</FlexItem>}
+</FlexLayout>
     </StackLayout>
   )
 }
 
 export const EvaluationsPage = () => {
    const [results, setResults] = useState<EvalResults | null>(null)
-  const [guardrailLogs, setGuardrailLogs] = useState<GuardrailLog[]>([])
+  const { logs: guardrailLogs, total: guardrailTotal, page: guardrailPage, setPage: setGuardrailPage } = useGuardrailLogs(5)
 
   useEffect(() => {
     fetch(`${BASE_URL}/api/evals`)
       .then(res => res.json())
       .then(data => setResults(data))
       .catch(() => setResults(null))
-
-    // Guardrail endpoint not implemented yet — using fallback
-    setGuardrailLogs(FALLBACK_GUARDRAIL_LOGS)
   }, [])
 
   const columnDefs = useMemo((): ColDef<PerQuestion>[] => [
@@ -212,15 +212,16 @@ export const EvaluationsPage = () => {
         </Text>
       </StackLayout>
 
-      <FlexLayout direction="row" style={{ gap: '16px' }}>
+      <FlexLayout direction="row" style={{ gap: '16px' }} className={styles.scoreRow}>
         <ScoreCard label="Faithfulness" score={results.faithfulness} />
         <ScoreCard label="Answer Relevancy" score={results.answer_relevancy} />
         <ScoreCard label="Context Precision" score={0.71} planned />
         <ScoreCard label="Context Recall" score={0.68} planned />
       </FlexLayout>
 
-      <FlexLayout direction="row" style={{ gap: '16px' }}>
-        <FlexItem >
+      <FlexLayout direction="row" style={{ gap: '16px' }} className={styles.chartRow}>
+        {/* <FlexItem style={{ flex: '1 1 50%' }}> */}
+        <FlexItem  className={styles.chartItem}>
           <Card className={styles.card}>
             <HighchartsReact.default
               key={`chart-${results.faithfulness}`}
@@ -233,20 +234,21 @@ export const EvaluationsPage = () => {
           </Card>
         </FlexItem>
 
-        <FlexItem>
+        <FlexItem className={styles.guardrailItem}>
+             {/* <FlexItem style={{ flex: '1 1 50%' }}> */}
           <Card className={styles.guardrailCard}>
-            <StackLayout gap={1}>
-              <FlexLayout gap={1} align="center">
-                <span className={styles.statusDot} />
+            <StackLayout style={{gap:'16px'}}>
+              <FlexLayout gap={1} align="center" style={{padding: '8px 8px 0px'}}>
+                {/* <span className={styles.statusDot} /> */}
                 <Text styleAs="h3">Guardrail Activity</Text>
               </FlexLayout>
-              <StackLayout gap={1}>
+              <StackLayout style={{gap:'4px', borderRadius:'8px'}}>
                 {guardrailLogs.map((log, i) => {
                   const s = statusColors[log.status] ?? statusColors['PASSED']
                   return (
                     <div key={i} className={styles.logEntry} style={{ backgroundColor: s.bg }}>
-                      <FlexLayout justify="space-between" className={styles.logHeader}>
-                        <FlexLayout gap={1} align="center">
+                      <FlexLayout justify="space-between" className={styles.logHeader} >
+                        <FlexLayout gap={1} align="center" style={{gap:'4px'}}>
                           <span className={styles.logDot} style={{ backgroundColor: s.dot }} />
                           <span className={styles.logStatus} style={{ color: s.text }}>{log.status}</span>
                         </FlexLayout>
@@ -257,7 +259,15 @@ export const EvaluationsPage = () => {
                     </div>
                   )
                 })}
+                <Pagination
+  currentPage={guardrailPage}
+  totalItems={guardrailTotal}
+  pageSize={5}
+  onPageChange={setGuardrailPage}
+/>
+
               </StackLayout>
+              
             </StackLayout>
           </Card>
         </FlexItem>

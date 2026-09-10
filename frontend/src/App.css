@@ -1,3 +1,15 @@
+@media (max-width: 768px) {
+  .app-shell {
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .app-content {
+    padding-bottom: 70px !important;
+    overflow-y: auto;
+  }
+}
+
 .text-white {
   color: #ffffff;
 }
@@ -53,4 +65,17 @@
 .app-content {
   flex: 1;
   padding: 24px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  min-height: 100vh;
 }
