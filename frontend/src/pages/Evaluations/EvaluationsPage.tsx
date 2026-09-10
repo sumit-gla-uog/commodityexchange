@@ -72,12 +72,12 @@ const ScoreCard = ({ label, score, planned = false }: {
       <div className={styles.progressTrack}>
         <div className={styles.progressFill} style={{ backgroundColor: barColor, width: `${score * 100}%` }} />
       </div>
-      <FlexLayout gap={1} align="center" direction="row">
-        <FlexItem className={styles.scoreBadge} style={{ backgroundColor: badgeBg, color }}>
-          {badge}
-        </FlexItem>
-        {planned && <FlexItem className={styles.plannedNote}>* RAGAS Python 3.11 required</FlexItem>}
-      </FlexLayout>
+    <FlexLayout gap={1} align="center" direction="row" style={{ flexWrap: 'wrap' }}>
+  <FlexItem className={styles.scoreBadge} style={{ backgroundColor: badgeBg, color }}>
+    {badge}
+  </FlexItem>
+  {planned && <FlexItem className={styles.plannedNote}>* RAGAS Python 3.11 required</FlexItem>}
+</FlexLayout>
     </StackLayout>
   )
 }
@@ -212,16 +212,16 @@ export const EvaluationsPage = () => {
         </Text>
       </StackLayout>
 
-      <FlexLayout direction="row" style={{ gap: '16px' }}>
+      <FlexLayout direction="row" style={{ gap: '16px' }} className={styles.scoreRow}>
         <ScoreCard label="Faithfulness" score={results.faithfulness} />
         <ScoreCard label="Answer Relevancy" score={results.answer_relevancy} />
         <ScoreCard label="Context Precision" score={0.71} planned />
         <ScoreCard label="Context Recall" score={0.68} planned />
       </FlexLayout>
 
-      <FlexLayout direction="row" style={{ gap: '16px' }}>
+      <FlexLayout direction="row" style={{ gap: '16px' }} className={styles.chartRow}>
         {/* <FlexItem style={{ flex: '1 1 50%' }}> */}
-        <FlexItem >
+        <FlexItem  className={styles.chartItem}>
           <Card className={styles.card}>
             <HighchartsReact.default
               key={`chart-${results.faithfulness}`}
@@ -234,21 +234,21 @@ export const EvaluationsPage = () => {
           </Card>
         </FlexItem>
 
-        <FlexItem >
+        <FlexItem className={styles.guardrailItem}>
              {/* <FlexItem style={{ flex: '1 1 50%' }}> */}
           <Card className={styles.guardrailCard}>
-            <StackLayout gap={1}>
-              <FlexLayout gap={1} align="center">
-                <span className={styles.statusDot} />
+            <StackLayout style={{gap:'16px'}}>
+              <FlexLayout gap={1} align="center" style={{padding: '8px 8px 0px'}}>
+                {/* <span className={styles.statusDot} /> */}
                 <Text styleAs="h3">Guardrail Activity</Text>
               </FlexLayout>
-              <StackLayout gap={1}>
+              <StackLayout style={{gap:'4px', borderRadius:'8px'}}>
                 {guardrailLogs.map((log, i) => {
                   const s = statusColors[log.status] ?? statusColors['PASSED']
                   return (
                     <div key={i} className={styles.logEntry} style={{ backgroundColor: s.bg }}>
-                      <FlexLayout justify="space-between" className={styles.logHeader}>
-                        <FlexLayout gap={1} align="center">
+                      <FlexLayout justify="space-between" className={styles.logHeader} >
+                        <FlexLayout gap={1} align="center" style={{gap:'4px'}}>
                           <span className={styles.logDot} style={{ backgroundColor: s.dot }} />
                           <span className={styles.logStatus} style={{ color: s.text }}>{log.status}</span>
                         </FlexLayout>

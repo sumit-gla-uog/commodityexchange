@@ -45,3 +45,16 @@
   padding: 24px;
   text-align: center;
 }
+
+@media (max-width: 768px) {
+  .filterRow {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+  }
+
+  .filterButton {
+    flex-shrink: 0;
+  }
+}

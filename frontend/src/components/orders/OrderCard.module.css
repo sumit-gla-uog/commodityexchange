@@ -206,3 +206,15 @@
 .addNoteButton:hover {
   color: #d1d5db;
 }
+@media (max-width: 768px) {
+  .offerRow,
+  .numbersRow {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .offerBox,
+  .numberBox {
+    flex: 1 1 45%; /* 2 items per row */
+  }
+}

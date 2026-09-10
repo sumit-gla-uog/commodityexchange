@@ -37,33 +37,32 @@ export const MarketListingsTab = ({ listings, onMatch }: MarketListingsTabProps)
         <span>Posted</span>
         <span></span>
       </div>
-
       {paginatedListings.map((l) => {
-        const isMyListing = l.user_id === currentUser.id
-        return (
-          <div key={l.id} className={styles.row}>
-            <span className={styles.company}>{l.sme_name}</span>
-            <span className={styles.location}>{l.location_uk}</span>
-            <span>{l.commodity_offered}</span>
-            <span className={styles.qty}>{l.quantity_offered_mt}t</span>
-            <span>{l.commodity_wanted}</span>
-            <span className={styles.fairValue}>—</span>
-            <span className={styles.posted}>{new Date(l.created_at).toLocaleDateString()}</span>
-            <button
-              className={styles.matchButton}
-              onClick={() => isMyListing && onMatch(l.id)}
-              disabled={!isMyListing}
-              title={!isMyListing ? 'You can only match your own listings' : 'Find a match'}
-              style={{
-                opacity: isMyListing ? 1 : 0.4,
-                cursor: isMyListing ? 'pointer' : 'not-allowed',
-              }}
-            >
-              ⇄ Match
-            </button>
-          </div>
-        )
-      })}
+  const isMyListing = l.user_id === currentUser.id
+  return (
+    <div key={l.id} className={styles.row}>
+      <span data-label="Company" className={styles.company}>{l.sme_name}</span>
+      <span data-label="Location" className={styles.location}>{l.location_uk}</span>
+      <span data-label="Offering">{l.commodity_offered}</span>
+      <span data-label="Qty" className={styles.qty}>{l.quantity_offered_mt}t</span>
+      <span data-label="Wanting">{l.commodity_wanted}</span>
+      <span data-label="Fair Value" className={styles.fairValue}>—</span>
+      <span data-label="Posted" className={styles.posted}>{new Date(l.created_at).toLocaleDateString()}</span>
+      <button
+        className={styles.matchButton}
+        onClick={() => isMyListing && onMatch(l.id)}
+        disabled={!isMyListing}
+        title={!isMyListing ? 'You can only match your own listings' : 'Find a match'}
+        style={{
+          opacity: isMyListing ? 1 : 0.4,
+          cursor: isMyListing ? 'pointer' : 'not-allowed',
+        }}
+      >
+        ⇄ Match
+      </button>
+    </div>
+  )
+})}
 
       <Pagination
         currentPage={page}
