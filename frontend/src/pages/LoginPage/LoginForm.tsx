@@ -57,7 +57,7 @@ export const LoginForm = ({ onSwitchToRegister }: LoginFormProps) => {
 
         <div className={styles.field}>
           <label className={styles.label}>Password</label>
-          <input {...register('password', { required: true })} type="password" placeholder="••••••••" className={styles.input} />
+          <input {...register('password', { required: true })} type="password" placeholder="********" className={styles.input} />
           {errors.password && <Text className={styles.errorText}>Required</Text>}
         </div>
 

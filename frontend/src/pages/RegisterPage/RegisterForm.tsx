@@ -60,8 +60,16 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
 
         <div className={styles.field}>
           <label className={styles.label}>Password</label>
-          <input {...register('password', { required: true, minLength: 6 })} type="password" placeholder="••••••••" className={styles.input} />
-          {errors.password && <Text className={styles.errorText}>Min 6 characters</Text>}
+          <input
+            {...register('password', {
+              required: 'Password is required',
+              minLength: { value: 6, message: 'Min 6 characters' }
+            })}
+            type="password"
+            placeholder="********"
+            className={styles.input}
+          />
+          {errors.password && <Text className={styles.errorText}>{errors.password.message}</Text>}
         </div>
 
         <div className={styles.field}>

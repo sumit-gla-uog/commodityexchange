@@ -48,7 +48,7 @@ class FakeSupabase:
 
 
 VALID_ORDER_PAYLOAD = {
-    "party_a_name": "OM Exchange Ltd",
+    "party_a_name": "Sumit Exchange Ltd",
     "party_a_commodity": "Copper",
     "party_a_quantity": 50,
     "party_b_name": "Scottish Metals Ltd",
@@ -127,7 +127,7 @@ def test_get_orders_filters_by_user_id():
 #  GET /{order_id}
 
 def test_get_order_returns_single_order():
-    order = {"id": "order-1", "party_a_name": "OM Exchange Ltd"}
+    order = {"id": "order-1", "party_a_name": "Sumit Exchange Ltd"}
     app.dependency_overrides[get_db] = lambda: FakeSupabase([order])
 
     res = client.get("/api/orders/order-1")

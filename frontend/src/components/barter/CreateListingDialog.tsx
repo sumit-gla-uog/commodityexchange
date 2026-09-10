@@ -8,9 +8,10 @@ interface CreateListingDialogProps {
   onSuccess: () => void
 }
 
-const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
+
 
 export const CreateListingDialog = ({ open, onClose, onSuccess }: CreateListingDialogProps) => {
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
   const [form, setForm] = useState({
     commodity_offered: '',
     quantity_offered_mt: '',

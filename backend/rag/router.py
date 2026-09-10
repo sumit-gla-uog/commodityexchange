@@ -4,6 +4,7 @@ from pydantic import BaseModel
 # from rag.engine import query, retrieve_context, build_prompt, generate_response
 from guardrails.checks import run_all_guards
 from rag.agent import agentic_query
+import traceback
 
 router = APIRouter()
 
@@ -84,5 +85,12 @@ def agentic_chat(request: ChatRequest):
             answer=answer
         )
 
+    # except Exception as e:
+    #     raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print("=== ERROR in agentic_chat ===")
+        traceback.print_exc()
+        return ChatResponse(
+           query=request.query,
+           answer="Sorry, I had trouble processing that query. Please try rephrasing it."
+           )
