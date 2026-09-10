@@ -37,3 +37,4 @@ scikit-learn==1.8.0
 # Test
 pytest==8.3.4
 pytest-mock==3.14.0
+json-repair
