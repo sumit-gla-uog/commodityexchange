@@ -33,4 +33,5 @@ src/assets/icons.svg
 public/icons.svg
 
 # Default Vite README
-README.md
+README.mdcoverage/
+coverage/

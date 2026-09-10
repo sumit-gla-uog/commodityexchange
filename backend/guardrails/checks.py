@@ -3,6 +3,7 @@ import json
 import re
 from groq import Groq
 from dotenv import load_dotenv
+import json_repair
 
 load_dotenv()
 
@@ -31,8 +32,26 @@ def parse_json_response(text: str) -> dict:
     if start == -1:
         raise ValueError(f"No JSON object found in response: {text!r}")
 
-    decoder = json.JSONDecoder()
-    obj, _ = decoder.raw_decode(text, start)
+    # decoder = json.JSONDecoder()
+    # obj, _ = decoder.raw_decode(text, start)
+    # return obj
+    try:
+        decoder = json.JSONDecoder()
+        obj, _ = decoder.raw_decode(text, start)
+        # return obj
+    except json.JSONDecodeError:
+        # Fall back to a lenient repair for malformed JSON (e.g. missing commas)
+        try:
+            return json_repair.loads(text[start:])
+        except Exception:
+            # Could not parse or repair the LLM's response — fail safe
+            raise ValueError(f"Could not parse guard response as JSON: {text!r}")
+    # json_repair can sometimes return a list if the LLM wrapped the object
+    if isinstance(obj, list):
+        if len(obj) == 0 or not isinstance(obj[0], dict):
+            raise ValueError(f"Unexpected JSON shape from guard response: {text!r}")
+        obj = obj[0]
+
     return obj
 
 
@@ -61,7 +80,7 @@ Reply with ONLY a JSON object, no extra text:
 {{"is_relevant": true or false, "reason": "brief explanation in one sentence"}}"""
 
     response = client.chat.completions.create(
-        model="qwen/qwen3.6-27b",
+        model="openai/gpt-oss-120b",
         messages=[{"role": "user", "content": prompt}],
         temperature=0,
         # max_tokens=100
@@ -69,13 +88,21 @@ Reply with ONLY a JSON object, no extra text:
     )
     # print('result from model---',response)
     # result = json.loads(response.choices[0].message.content)
-    result = parse_json_response(response.choices[0].message.content)
+    # result = parse_json_response(response.choices[0].message.content)
     # print('result from model---',result)
 
-    return {
-        "passed": result["is_relevant"],
-        "reason": result["reason"]
-    }
+    try:
+        result = parse_json_response(response.choices[0].message.content)
+        return {
+            "passed": result.get("is_relevant", True),
+            "reason": result.get("reason", "Could not determine relevance; allowing by default.")
+        }
+    except Exception:
+        # If parsing fails entirely, fail-open rather than crashing the request
+        return {
+            "passed": True,
+            "reason": "Topic check failed to parse; allowing by default."
+        }
 
 
 def hallucination_guard(query: str, answer: str, context_chunks: list) -> dict:
