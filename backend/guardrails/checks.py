@@ -141,7 +141,7 @@ Reply with ONLY a JSON object, no extra text:
 {{"is_grounded": true or false, "confidence": "high/medium/low", "reason": "brief explanation in one sentence"}}"""
 
     response = client.chat.completions.create(
-        model="qwen/qwen3.6-27b",
+        model="openai/gpt-oss-120b",
         messages=[{"role": "user", "content": prompt}],
         temperature=0,
         # max_tokens=150
@@ -175,7 +175,7 @@ Reply with ONLY a JSON object, no extra text:
 {{"is_toxic": true or false, "reason": "brief explanation in one sentence"}}"""
 
     response = client.chat.completions.create(
-        model="qwen/qwen3.6-27b",
+        model="openai/gpt-oss-120b",
         messages=[{"role": "user", "content": prompt}],
         temperature=0,
         # max_tokens=100

@@ -64,7 +64,7 @@
 
 # def generate_response(prompt: str):
 #     response = groq_client.chat.completions.create(
-#         model="qwen/qwen3.6-27b",
+#         model="openai/gpt-oss-120b",
 #         messages=[{"role": "user", "content": prompt}],
 #         temperature=0.3,
 #         max_tokens=500

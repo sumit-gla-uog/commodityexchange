@@ -115,7 +115,7 @@ export const MatchResultPanel = ({ listingId, onClose, onSuccess }: MatchResultP
         <div className={styles.actionsRow}>
           <Text className={styles.footnote}>Settlement via CommodEx Escrow · HMRC-compliant · 48hr fulfilment</Text>
           <Button onClick={startConfirming} className={styles.initiateButton}>
-             <FlexLayout style={{gap:"16px"}}><SwapIcon></SwapIcon> <Text>Initiate Trade</Text></FlexLayout>
+            <FlexLayout style={{ gap: "16px" }}><SwapIcon></SwapIcon> <Text>Initiate Trade</Text></FlexLayout>
           </Button>
         </div>
       )}
