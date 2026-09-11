@@ -67,9 +67,7 @@ class ChatResponse(BaseModel):
 def agentic_chat(request: ChatRequest):
     try:
         # Run all guardrails first
-        # print('agentic_chat called with:', request.query)
         guard_result = run_all_guards(query=request.query)
-        # print('guard_result:', guard_result)
 
         if not guard_result["overall_passed"]:
             return ChatResponse(
@@ -85,8 +83,6 @@ def agentic_chat(request: ChatRequest):
             answer=answer
         )
 
-    # except Exception as e:
-    #     raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:
         print("=== ERROR in agentic_chat ===")
         traceback.print_exc()

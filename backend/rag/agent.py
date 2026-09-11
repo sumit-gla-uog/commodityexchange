@@ -7,8 +7,14 @@ from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain.tools import tool
 from langchain_core.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
+
+# Cache setup 
+_live_price_cache = {}
+_live_price_cache_time = {}
+LIVE_PRICE_CACHE_TTL = 3600  # 1 hour
 
 # Config
 CHROMA_DIR = os.path.join(
@@ -78,6 +84,13 @@ def get_live_price(commodity: str) -> str:
     if not av_function:
         return f"Live price not available for {commodity}. Available: copper, aluminum, crude oil, natural gas, wheat, corn, sugar."
 
+    # Check cache first
+    cache_key = av_function
+    now = time.time()
+    if cache_key in _live_price_cache and (now - _live_price_cache_time.get(cache_key, 0)) < LIVE_PRICE_CACHE_TTL:
+        cached = _live_price_cache[cache_key]
+        return f"Current {commodity} price: {cached['value']} USD (as of {cached['date']}) — Source: Alpha Vantage (cached)"
+    
     try:
         url = f"https://www.alphavantage.co/query?function={av_function}&interval=monthly&apikey={ALPHA_VANTAGE_KEY}"
         response = requests.get(url, timeout=10)
@@ -85,6 +98,8 @@ def get_live_price(commodity: str) -> str:
 
         if "data" in data and len(data["data"]) > 0:
             latest = data["data"][0]
+            _live_price_cache[cache_key] = latest
+            _live_price_cache_time[cache_key] = now
             return f"Current {commodity} price: {latest['value']} USD (as of {latest['date']}) — Source: Alpha Vantage"
         else:
             return f"Live price data not available for {commodity}"
@@ -129,7 +144,7 @@ def get_commodity_news(commodity: str) -> str:
 # AGENT SETUP
 def create_commodity_agent():
     llm = ChatGroq(
-        # model="qwen/qwen3.6-27b",
+        # model="openai/gpt-oss-120b",
         model="openai/gpt-oss-120b",
         api_key=os.getenv("GROQ_API_KEY"),
         temperature=0.2,

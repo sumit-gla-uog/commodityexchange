@@ -23,7 +23,7 @@ const statusClass: Record<string, string> = {
 }
 
 export const OrderCard = ({ order, onNoteUpdated }: OrderCardProps) => {
-//   const [note, setNote] = useState(order.note ?? '')
+  //   const [note, setNote] = useState(order.note ?? '')
   const [isEditing, setIsEditing] = useState(false)
   const [draft, setDraft] = useState(order.note ?? '')
   const { updateNote, submitting } = useUpdateOrderNote()
@@ -38,7 +38,7 @@ export const OrderCard = ({ order, onNoteUpdated }: OrderCardProps) => {
     return 'Balanced, no additional payment'
   }
 
- const handleSave = async () => {
+  const handleSave = async () => {
     const success = await updateNote(order.id, draft)
     if (success) {
       setIsEditing(false)
@@ -104,20 +104,20 @@ export const OrderCard = ({ order, onNoteUpdated }: OrderCardProps) => {
 
       <Text className={styles.settlementLine}>{settlementLine()}</Text>
 
-     {isEditing ? (
-  <div className={styles.noteEditRow}>
-    <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Add a note..." className={styles.noteInput} disabled={submitting} />
-    <button onClick={handleSave} className={styles.noteSaveButton} disabled={submitting}>{submitting ? 'Saving...' : 'Save'}</button>
-    <button onClick={handleCancel} className={styles.noteCancelButton} disabled={submitting}>Cancel</button>
-  </div>
-) : order.note ? (
-  <div className={styles.noteRow} onClick={() => setIsEditing(true)}>
-    <Text className={styles.noteText}>{order.note}</Text>
-    <span className={styles.editIcon}>✎</span>
-  </div>
-) : (
-  <button onClick={() => setIsEditing(true)} className={styles.addNoteButton}><AddDocumentIcon/> Add note</button>
-)}
+      {isEditing ? (
+        <div className={styles.noteEditRow}>
+          <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Add a note..." className={styles.noteInput} disabled={submitting} />
+          <button onClick={handleSave} className={styles.noteSaveButton} disabled={submitting}>{submitting ? 'Saving...' : 'Save'}</button>
+          <button onClick={handleCancel} className={styles.noteCancelButton} disabled={submitting}>Cancel</button>
+        </div>
+      ) : order.note ? (
+        <div className={styles.noteRow} onClick={() => setIsEditing(true)}>
+          <Text className={styles.noteText}>{order.note}</Text>
+          <span className={styles.editIcon}>✎</span>
+        </div>
+      ) : (
+        <button onClick={() => setIsEditing(true)} className={styles.addNoteButton}><AddDocumentIcon /> Add note</button>
+      )}
     </div>
   )
 }

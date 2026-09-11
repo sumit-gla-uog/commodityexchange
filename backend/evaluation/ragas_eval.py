@@ -42,7 +42,7 @@ Score from 0.0 to 1.0 where:
 Reply with ONLY a number between 0.0 and 1.0"""
 
     response = groq_client.chat.completions.create(
-        model="qwen/qwen3.6-27b",
+        model="openai/gpt-oss-120b",
         messages=[{"role": "user", "content": prompt}],
         temperature=0,
         max_tokens=10
@@ -67,7 +67,7 @@ Score from 0.0 to 1.0 where:
 Reply with ONLY a number between 0.0 and 1.0"""
 
     response = groq_client.chat.completions.create(
-        model="qwen/qwen3.6-27b",
+        model="openai/gpt-oss-120b",
         messages=[{"role": "user", "content": prompt}],
         temperature=0,
         max_tokens=10

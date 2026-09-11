@@ -68,14 +68,14 @@ def setup_chromadb(chroma_dir, collection_name):
 # def embed_and_store(chunks, collection):
 #     total = len(chunks)
     
-#     for i in range(START_FROM, total, BATCH_SIZE):  # START_FROM se shuru
+#     for i in range(START_FROM, total, BATCH_SIZE):  # START_FROM 
 #         batch = chunks[i:i + BATCH_SIZE]
 #         # ... baaki same
 #         time.sleep(1)  # 0.5 se badhakar 1 second
 def embed_and_store(chunks, collection):
     total = len(chunks)
     
-    for i in range(START_FROM, total, BATCH_SIZE): # START_FROM se shuru
+    for i in range(START_FROM, total, BATCH_SIZE): # START_FROM 
         batch = chunks[i:i + BATCH_SIZE]
         
         texts = [c["text"] for c in batch]
@@ -96,8 +96,8 @@ def embed_and_store(chunks, collection):
         print(f"Stored {min(i + BATCH_SIZE, total)}/{total} chunks")
         
         # to avoid Rate limit, we are waiting for few milli seconds
-        time.sleep(1)# 0.5 se badhakar 1 second
-
+        time.sleep(1)
+        
 # Part 5: Verify + Main
 
 def verify(collection):

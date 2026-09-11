@@ -25,7 +25,7 @@ def get_latest_price(commodity: str):
     valid = df[df[commodity] != ""]
     if valid.empty:
         return None
-    return float(valid.iloc[-1][commodity])
+    return float(valid.iloc[-1][commodity]) # last row = means recent date
 
 
 def calculate_fair_value(listing_a: dict, listing_b: dict):
@@ -124,11 +124,6 @@ def match_listing(listing_id: str, supabase = Depends(get_db)):
             continue
         if listing["commodity_wanted"] != source["commodity_offered"]:
             continue
-
-        # qty_diff = abs(listing["quantity_offered_mt"] - source["quantity_wanted_mt"])
-        # qty_max = max(listing["quantity_offered_mt"], source["quantity_wanted_mt"])
-        # if (qty_diff / qty_max) > 0.20:
-        #     continue
 
         fair_value = calculate_fair_value(source, listing)
         if fair_value is None:

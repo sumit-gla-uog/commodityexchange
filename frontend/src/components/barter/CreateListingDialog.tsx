@@ -8,8 +8,6 @@ interface CreateListingDialogProps {
   onSuccess: () => void
 }
 
-
-
 export const CreateListingDialog = ({ open, onClose, onSuccess }: CreateListingDialogProps) => {
   const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
   const [form, setForm] = useState({
