@@ -6,11 +6,13 @@ Student: Sumit Kumar  (3167833K)
 Supervisor: Blair Archibald
 
 ---
-> **Note:** This README reflects the current project plan and proposed architecture. Implementation has been started post feedback discussion from our supervisor. All architectural and technical decisions are subject to change pending supervisor feedback. This document is intended to provide a high-level overview for reference purposes only.
+> **Note:** This project is complete and submitted as part of the MSc Computing Science (Software Development) dissertation. This README reflects the final implemented architecture.
 
 ## Project Overview
 
-CommodEx is a B2B SaaS platform for UK industrial SMEs and commodity traders. It provides three integrated core features: an agentic RAG based commodity intelligence system that retrieves live and historical price data to answer natural language procurement queries, a real-time pricing dashboard, and a barter matching engine for surplus raw material exchange. The platform includes a guardrails layer for AI safety and a RAGAS evaluation pipeline to measure response quality.
+CommodEx is a B2B SaaS platform for UK industrial SMEs and commodity traders. It provides three integrated core features: an agentic RAG based commodity intelligence system that retrieves live and historical price data to answer natural language procurement queries, a pricing dashboard, and a barter matching engine for surplus raw material exchange. The platform includes a guardrails layer for AI safety and a custom LLM-as-judge evaluation pipeline to measure response quality.
+
+The pricing dashboard is built on World Bank Pink Sheet historical data rather than live Alpha Vantage prices, due to Alpha Vantage's free-tier limit of 25 API calls per day. Live pricing via Alpha Vantage is used selectively by the RAG chatbot's live price tool, where a single query-triggered call is more sustainable than rendering all commodity cards against a live feed on every dashboard load.
 
 ---
 
@@ -61,7 +63,7 @@ commodityexchange/
 Agentic commodity intelligence system that accepts natural language procurement queries from SME users, retrieves semantically relevant historical price context from ChromaDB using HuggingFace embeddings, fetches live commodity prices via Alpha Vantage, and generates contextualised procurement recommendations using Groq LLaMA-3.3-70B.
 
 **2. Pricing Dashboard (/prices)**
-Historical and live commodity price visualisation for 14 commodities across metals, energy, and agriculture with trend charts and category filters.
+Historical commodity price visualisation for 14 commodities across metals, energy, and agriculture, sourced from World Bank Pink Sheet data, with trend charts and category filters. A separate live-price endpoint (Alpha Vantage) exists but is used by the RAG chatbot's live price tool rather than the dashboard, due to Alpha Vantage's 25 calls/day free-tier limit.
 
 **3. Barter Matching Engine (/barter)**
 Rule-based P2P surplus raw material matching between UK industrial SMEs with fair value calculation using current World Bank prices and simulated settlement summary.
@@ -87,72 +89,53 @@ Topic guard, hallucination check, and toxicity filter applied on every query and
 
 ## Local Setup
 
-## Data Setup (Run Locally)- if you want to see intelligence answer before hand.
-
-Download World Bank Pink Sheet:
-https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx
-Place in data/ folder then run:
-
-cd backend
-python ingestion/clean_worldbank.py
-python ingestion/transform_chunks.py
-python ingestion/embed_store.py
-
-## Chainlit UI Setup (Prototype)
-
-The RAG chatbot prototype uses Chainlit. Due to Python 3.13 
-incompatibility with the cryptography package, Chainlit must 
-be installed via Conda instead of pip.
-
-### Prerequisites
-
-If Chainlit installation fails with pip due to cryptography 
-build error on Python 3.13, use the following:
+### 1. Clone the repository
 
 ```bash
-# Install via Conda
+git clone https://github.com/sumit-gla-uog/commodityexchange.git
+cd commodityexchange
+```
+
+### 2. Environment Variables
+
+Create a `.env` file in the `commodityexchange/` root folder (see `.env.example` for reference) with the following keys:
+
+```dotenv
+ALPHA_VANTAGE_API_KEY=yourAlphaVantageKey
+GROQ_API_KEY=YourGroqAPIKey
+HUGGINGFACE_API_KEY=YourHuggingFaceKey
+SUPABASE_URL=YourSupabaseURL
+SUPABASE_KEY=YourSupabaseKey
+```
+
+### 3. Backend Setup
+
+```bash
+cd backend
 source ~/miniconda3/bin/activate
-conda install -c conda-forge chainlit
-```
-
-### Run Chainlit UI
-
-```bash
-# From project root
-chainlit run chainlit-ui/app.py --port 8001
-```
-
-Open browser at http://localhost:8001
-
-### Note
-
-Chainlit UI is a prototype for the RAG chatbot demonstration. 
-It will be replaced by the React frontend in the final platform. 
-If port 8001 is in use, change to any available port.
-
-
-### Backend
-
-```bash
-cd backend
 pip install -r requirements.txt
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
-### Frontend
+### 4. Frontend Setup
 
 ```bash
 cd frontend
 npm install
+npm run test:coverage   # or: npm run test
 npm run dev
 ```
 
 Backend: `http://localhost:8000`
-Frontend: `http://localhost:3000`
+Frontend: `http://localhost:5173`
 
 ---
 
-## Data Pipeline (Run Locally Only) - Explained above on line number - 90
+## Data Setup (Run Locally) - if you want to see intelligence answer before hand.
+
+Download World Bank Pink Sheet:
+https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx
+Place in data/ folder then run:
 
 ```bash
 cd backend
@@ -177,6 +160,31 @@ python evaluation/ragas_eval.py
 | Frontend | Netlify   | frontend/ |
 | Backend  | Render    | backend/  |
 | Database | Supabase  | Managed   |
+
+---
+
+## Legacy Prototype Note — Chainlit UI
+
+The RAG chatbot was initially prototyped using Chainlit before being 
+replaced by the React frontend in the final platform. Kept here for 
+historical reference only — not required for local setup above.
+
+Due to Python 3.13 incompatibility with the cryptography package, 
+Chainlit had to be installed via Conda instead of pip:
+
+```bash
+# Install via Conda
+source ~/miniconda3/bin/activate
+conda install -c conda-forge chainlit
+```
+
+Run:
+
+```bash
+chainlit run chainlit-ui/app.py --port 8001
+```
+
+Open browser at http://localhost:8001
 
 ---
 
