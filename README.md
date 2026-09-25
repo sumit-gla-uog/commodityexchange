@@ -2,7 +2,7 @@
 
 **MSc Computing Science (Software Development) Dissertation**
 University of Glasgow | 2025-26
-Student: Sumit Kumar  (3167833K)
+Student: Sumit Kumar
 Supervisor: Blair Archibald
 
 ---
